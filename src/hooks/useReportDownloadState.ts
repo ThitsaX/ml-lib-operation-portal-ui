@@ -428,6 +428,13 @@ export function useReportDownloadState(
           return;
         }
 
+        // Check current status from storage before making API call
+        const currentStored = pollHelpers.readStorage();
+        if (currentStored?.status === 'READY') {
+          // If already READY, don't make status checking API call, just exit
+          return;
+        }
+
         try {
           statusRes = await getReportDownloadStatus(userRef.current as any, requestId);
         } catch (err: any) {
@@ -515,19 +522,29 @@ export function useReportDownloadState(
       return;
     }
 
+    if (stored.status === 'READY') {
+      // Don't resume polling if already READY - just set the state
+      setDownloadStatus('READY');
+      setReadyFile(initial.readyFile);
+      return;
+    }
+
     if (stored.status === 'PENDING' || stored.status === 'RUNNING') {
       const abort = { aborted: false };
       abortRef.current = abort;
       void runPollLoop(stored.requestId, stored.fileType, abort);
-      return () => {
-        abort.aborted = true;
-      };
     }
 
     return () => {
+      console.log('useReportDownloadState: Component unmounted, stopping polling');
       abortRef.current.aborted = true;
     };
   }, [storageKey, readStorage, runPollLoop, jobTtlMs, readyTtlMs]);
+
+  useEffect(() => {
+    console.log("effect mounted");
+    return () => console.log("cleanup running");
+  }, []);
 
   const startPolling = useCallback((requestId: string, fileType: string) => {
     abortRef.current.aborted = true;

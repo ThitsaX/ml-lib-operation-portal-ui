@@ -23,7 +23,7 @@ import { type ISettlementSummaryReport } from '@typescript/form/report';
 
 import { isEmpty } from 'lodash-es';
 import moment from 'moment-timezone';
-import { useMemo, useEffect, memo, useCallback, useState } from "react";
+import { useMemo, useEffect, memo, useState, useCallback } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { IGetSettlementIds } from "@typescript/services/report";
 import { useLoadingContext } from "@contexts/hooks";
@@ -42,6 +42,7 @@ import { showDataNotFound } from '@utils';
 import { useTranslation } from 'react-i18next';
 import { CheckCircleIcon, WarningIcon } from '@chakra-ui/icons';
 import { useReportDownloadState } from '@hooks/useReportDownloadState';
+import { PreventableButton } from '@components/interface/PreventableButton';
 
 const settlementSummaryReportHelper = new SettlementSummaryReportHelper();
 const initialFileName = 'DFSPSettlementReport';
@@ -57,7 +58,6 @@ const SettlementSummaryReport = () => {
   const toast = useToast();
   const { t } = useTranslation();
   const [runButtonState, setRunButtonState] = useState(true);
-  const readyToastId = 'dfsp-settlement-report-ready';
   const [settlementIdOptions, setSettlementIdOptions] = useState<any[]>([]);
 
   // Redux
@@ -71,27 +71,8 @@ const SettlementSummaryReport = () => {
 
   const { downloadStatus, isDownloading, readyFile, failedMessage, startPolling, consumeDownload, clearDownloadState } = useReportDownloadState(
     'DFSPSettlementReport',
-    (_fileName) => {
-      if (!toast.isActive(readyToastId)) {
-        toast({
-          id: readyToastId,
-          position: 'top',
-          description: `Your DFSP Settlement Report is ready.`,
-          status: 'success',
-          isClosable: true,
-          duration: 5000,
-        });
-      }
-    },
-    (error: IApiErrorResponse) => {
-      toast({
-        position: 'top',
-        description: getErrorMessage(error) || 'Failed to request report',
-        status: 'error',
-        isClosable: true,
-        duration: 10000,
-      });
-    }
+    () => {}, // Toast handled globally in App.tsx
+    () => {} // Toast handled globally in App.tsx
   );
 
   const user = useGetUserState();
@@ -156,6 +137,7 @@ const SettlementSummaryReport = () => {
   }, [isHubUser, user, setValue]);
 
   /* Handlers */
+
 
   const onDownloadClick = async () => {
     if (!isValid) {
@@ -586,14 +568,14 @@ const SettlementSummaryReport = () => {
               </Text>
             </Box>
           </HStack>
-          <Button
-            size="sm"
-            colorScheme="green"
-            flexShrink={0}
-            onClick={consumeDownload}
-          >
-            Click to Download
-          </Button>
+            <PreventableButton
+              size="sm"
+              colorScheme="green"
+              flexShrink={0}
+              onClick={consumeDownload}
+            >
+              Click to Download
+            </PreventableButton>
         </HStack>
       )}
 

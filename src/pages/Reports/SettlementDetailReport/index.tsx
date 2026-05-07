@@ -27,7 +27,7 @@ import { type ISettlementDetailReport } from '@typescript/form/report';
 
 import { isEmpty } from 'lodash-es';
 import moment from 'moment-timezone';
-import { useMemo, memo, useEffect, useCallback, useState } from "react";
+import { memo, useMemo, useEffect, useState, useCallback } from 'react'
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { IGetSettlementIds } from "@typescript/services/report";
 import { useLoadingContext } from "@contexts/hooks";
@@ -45,6 +45,7 @@ import { showDataNotFound } from '@utils';
 import { useTranslation } from 'react-i18next';
 import { CheckCircleIcon, WarningIcon } from '@chakra-ui/icons';
 import { useReportDownloadState } from '@hooks/useReportDownloadState';
+import { PreventableButton } from '@components/interface/PreventableButton';
 
 const settlementDetailReportHelper = new SettlementDetailReportHelper();
 const initialFileName = 'DFSPSettlementDetailReport';
@@ -61,10 +62,8 @@ const SettlementDetailReport = () => {
   const { t } = useTranslation();
   const [runButtonState, setRunButtonState] = useState(true);
   const [settlementIdOptions, setSettlementIdOptions] = useState<any[]>([]);
-  const readyToastId = 'dfsp-settlement-detail-report-ready';
 
   const [settlementId, setSettlementId] = useState("");
-
 
   // Redux
   const user = useGetUserState();
@@ -78,27 +77,8 @@ const SettlementDetailReport = () => {
   /* Handlers */
   const { downloadStatus, isDownloading, readyFile, failedMessage, startPolling, consumeDownload, clearDownloadState } = useReportDownloadState(
     'DFSPSettlementDetailReport',
-    (_fileName) => {
-      if (!toast.isActive(readyToastId)) {
-        toast({
-          id: readyToastId,
-          position: 'top',
-          description: `Your DFSP Settlement Detail Report is ready.`,
-          status: 'success',
-          isClosable: true,
-          duration: 5000,
-        });
-      }
-    },
-    (error: IApiErrorResponse) => {
-      toast({
-        position: 'top',
-        description: getErrorMessage(error) || 'Failed to request report',
-        status: 'error',
-        isClosable: true,
-        duration: 10000,
-      });
-    }
+    () => {}, // Toast handled globally in App.tsx
+    () => {} // Toast handled globally in App.tsx
   );
 
   const { data: participantList } = useGetParticipantList();
@@ -141,6 +121,7 @@ const SettlementDetailReport = () => {
     return result;
     
   }, [fspIdValue, participantList]);
+
 
   useEffect(() => {
     setValue('startDate', moment().tz(selectedTZString).startOf('day').format('YYYY-MM-DDTHH:mm:ss'));
@@ -580,14 +561,14 @@ const SettlementDetailReport = () => {
               </Text>
             </Box>
           </HStack>
-          <Button
-            size="sm"
-            colorScheme="green"
-            flexShrink={0}
-            onClick={consumeDownload}
-          >
-            Click to Download
-          </Button>
+            <PreventableButton
+              size="sm"
+              colorScheme="green"
+              flexShrink={0}
+              onClick={consumeDownload}
+            >
+              Click to Download
+            </PreventableButton>
         </HStack>
       )}
 

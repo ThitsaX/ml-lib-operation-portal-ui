@@ -38,6 +38,7 @@ import { showDataNotFound } from '@utils';
 import { useTranslation } from 'react-i18next';
 import { CheckCircleIcon, WarningIcon } from '@chakra-ui/icons';
 import { useReportDownloadState } from '@hooks/useReportDownloadState';
+import { PreventableButton } from '@components/interface/PreventableButton';
 
 const auditHelper = new AuditReportHelper();
 const initialFileName = 'AuditReport';
@@ -54,7 +55,6 @@ const AuditReport = () => {
 
     const { start, complete } = useLoadingContext();
     const [runButtonState, setRunButtonState] = useState(true);
-    const readyToastId = 'audit-report-ready';
 
     /* Redux */
     const { data: user } = useGetUserState();
@@ -71,27 +71,8 @@ const AuditReport = () => {
 
     const { downloadStatus, isDownloading, readyFile, failedMessage, startPolling, consumeDownload, clearDownloadState } = useReportDownloadState(
         'AuditReport',
-        (_fileName) => {
-            if (!toast.isActive(readyToastId)) {
-                toast({
-                    id: readyToastId,
-                    position: 'top',
-                    description: `Your Audit Report is ready.`,
-                    status: 'success',
-                    isClosable: true,
-                    duration: 5000,
-                });
-            }
-        },
-        (error: IApiErrorResponse) => {
-            toast({
-                position: 'top',
-                description: getErrorMessage(error) || 'Failed to request report',
-                status: 'error',
-                isClosable: true,
-                duration: 10000,
-            });
-        }
+        () => {}, // Toast handled globally in App.tsx
+        () => {} // Toast handled globally in App.tsx
     );
 
     /* React Query */
@@ -126,8 +107,7 @@ const AuditReport = () => {
 
     }, [selectedTimezone, user?.participantId, setValue]);
 
-    // Handler
-
+    
     const onDownloadClick = async () => {
         if (!isValid) {
             toast({
@@ -457,14 +437,14 @@ const AuditReport = () => {
                             </Text>
                         </Box>
                     </HStack>
-                    <Button
-                        size="sm"
-                        colorScheme="green"
-                        flexShrink={0}
-                        onClick={consumeDownload}
-                    >
-                        Click to Download
-                    </Button>
+                <PreventableButton
+                    size="sm"
+                    colorScheme="green"
+                    flexShrink={0}
+                    onClick={consumeDownload}
+                >
+                    Click to Download
+                </PreventableButton>
                 </HStack>
             )}
 

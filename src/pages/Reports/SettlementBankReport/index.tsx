@@ -44,6 +44,7 @@ import { showDataNotFound } from '@utils';
 import { useTranslation } from 'react-i18next';
 import { CheckCircleIcon, WarningIcon } from '@chakra-ui/icons';
 import { useReportDownloadState } from '@hooks/useReportDownloadState';
+import { PreventableButton } from '@components/interface/PreventableButton';
 
 const settlementBankReport = new SettlementBankReportHelper();
 const initialFileName = 'SettlementBankReport';
@@ -59,7 +60,6 @@ const SettlementBankReport = () => {
   const [runButtonState, setRunButtonState] = useState(true);
   const [settlementIdOptions, setSettlementIdOptions] = useState<any[]>([]);
   const [settlementId, setSettlementId] = useState("");
-  const readyToastId = 'settlement-bank-report-ready';
 
   const { data: currencyList } = useGetParticipantCurrencyList();
   // Redux
@@ -76,27 +76,8 @@ const SettlementBankReport = () => {
 
   const { downloadStatus, isDownloading, readyFile, failedMessage, startPolling, consumeDownload, clearDownloadState } = useReportDownloadState(
     'SettlementBankReport',
-    (_fileName) => {
-      if (!toast.isActive(readyToastId)) {
-        toast({
-          id: readyToastId,
-          position: 'top',
-          description: `Your Settlement Bank Report is ready.`,
-          status: 'success',
-          isClosable: true,
-          duration: 5000,
-        });
-      }
-    },
-    (error: IApiErrorResponse) => {
-      toast({
-        position: 'top',
-        description: getErrorMessage(error) || 'Failed to request report',
-        status: 'error',
-        isClosable: true,
-        duration: 10000,
-      });
-    }
+    () => {}, // Toast handled globally in App.tsx
+    () => {} // Toast handled globally in App.tsx
   );
 
   const schema = settlementBankReport.schema;
@@ -247,6 +228,7 @@ const SettlementBankReport = () => {
     }
   };
 
+  
   const onDownloadChangeHandler = (e: any) => {
     start();
     setRunButtonState(false);
@@ -533,14 +515,14 @@ const SettlementBankReport = () => {
               </Text>
             </Box>
           </HStack>
-          <Button
-            size="sm"
-            colorScheme="green"
-            flexShrink={0}
-            onClick={consumeDownload}
-          >
-            Click to Download
-          </Button>
+            <PreventableButton
+              size="sm"
+              colorScheme="green"
+              flexShrink={0}
+              onClick={consumeDownload}
+            >
+              Click to Download
+            </PreventableButton>
         </HStack>
       )}
 

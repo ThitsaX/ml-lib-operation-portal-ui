@@ -45,6 +45,7 @@ import { useTranslation } from 'react-i18next';
 import { useGetParticipantList } from '@hooks/services/participant';
 import { CheckCircleIcon, WarningIcon } from '@chakra-ui/icons';
 import { useReportDownloadState } from '@hooks/useReportDownloadState';
+import { PreventableButton } from '@components/interface/PreventableButton';
 
 const settlementBankReport = new SettlementBankReportHelper();
 const initialFileName = 'DFSPSettlementOverviewReport';
@@ -60,7 +61,6 @@ const SettlementOverviewReport = () => {
   const [runButtonState, setRunButtonState] = useState(true);
   const [settlementIdOptions, setSettlementIdOptions] = useState<any[]>([]);
   const [settlementId, setSettlementId] = useState("");
-  const readyToastId = 'dfsp-settlement-overview-report-ready';
 
   const { data: currencyList } = useGetParticipantCurrencyList();
   const { data: participantList } = useGetParticipantList();
@@ -79,27 +79,8 @@ const SettlementOverviewReport = () => {
 
   const { downloadStatus, isDownloading, readyFile, failedMessage, startPolling, consumeDownload, clearDownloadState } = useReportDownloadState(
     'DFSPSettlementOverviewReport',
-    (_fileName) => {
-      if (!toast.isActive(readyToastId)) {
-        toast({
-          id: readyToastId,
-          position: 'top',
-          description: `Your DFSP Settlement Overview Report is ready.`,
-          status: 'success',
-          isClosable: true,
-          duration: 5000,
-        });
-      }
-    },
-    (error: IApiErrorResponse) => {
-      toast({
-        position: 'top',
-        description: getErrorMessage(error) || 'Failed to request report',
-        status: 'error',
-        isClosable: true,
-        duration: 10000,
-      });
-    }
+    () => {}, // Toast handled globally in App.tsx
+    () => {} // Toast handled globally in App.tsx
   );
 
   const schema = settlementBankReport.schema;
@@ -143,6 +124,7 @@ const SettlementOverviewReport = () => {
     setValue('settlementId', '');
 
   }, [selectedTimezone, setValue]);
+
 
   const search = useCallback(() => {
     start();
@@ -547,14 +529,14 @@ const SettlementOverviewReport = () => {
               </Text>
             </Box>
           </HStack>
-          <Button
-            size="sm"
-            colorScheme="green"
-            flexShrink={0}
-            onClick={consumeDownload}
-          >
-            Click to Download
-          </Button>
+            <PreventableButton
+              size="sm"
+              colorScheme="green"
+              flexShrink={0}
+              onClick={consumeDownload}
+            >
+              Click to Download
+            </PreventableButton>
         </HStack>
       )}
 

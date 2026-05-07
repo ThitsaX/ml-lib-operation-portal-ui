@@ -40,6 +40,7 @@ import { REPORT_NOT_FOUND_ERROR } from '@helpers';
 import { showDataNotFound } from '@utils';
 import { useTranslation } from 'react-i18next';
 import { useReportDownloadState } from '@hooks/useReportDownloadState';
+import { PreventableButton } from '@components/interface/PreventableButton';
 
 
 const statusLabel: Record<string, string> = {
@@ -57,7 +58,6 @@ const TransactionDetailReport = () => {
   const toast = useToast();
   const { t } = useTranslation();
   const [runButtonState, setRunButtonState] = useState(true);
-  const readyToastId = 'transaction-detail-report-ready';
 
   // Redux
   const selectedTimezone = useSelector<RootState, ITimezoneOption>(s => s.app.selectedTimezone);
@@ -99,30 +99,11 @@ const TransactionDetailReport = () => {
   /* Handlers */
   const { downloadStatus, isDownloading, readyFile, failedMessage, startPolling, consumeDownload, clearDownloadState } = useReportDownloadState(
     'TransactionDetailReport',
-    (_fileName) => {
-      if (!toast.isActive(readyToastId)) {
-        toast({
-          id: readyToastId,
-          position: 'top',
-          description: `Your Transaction Detail Report is ready.`,
-          status: 'success',
-          isClosable: true,
-          duration: 5000,
-        });
-      }
-    },
-    (error: IApiErrorResponse) => {
-      toast({
-        position: 'top',
-        description: getErrorMessage(error) || 'Failed to request report',
-        status: 'error',
-        isClosable: true,
-        duration: 10000,
-      });
-
-    }
+    () => {}, // Toast handled globally in App.tsx
+    () => {} // Toast handled globally in App.tsx
   );
 
+  
   const onDownloadClick = async () => {
     if (!isValid) {
       toast({
@@ -417,14 +398,14 @@ const TransactionDetailReport = () => {
                 </Text>
               </Box>
             </HStack>
-            <Button
+            <PreventableButton
               size="sm"
               colorScheme="green"
               flexShrink={0}
               onClick={consumeDownload}
             >
               Click to Download
-            </Button>
+            </PreventableButton>
           </HStack>
         )}
 

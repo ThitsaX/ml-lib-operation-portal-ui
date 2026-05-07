@@ -34,6 +34,7 @@ import { showDataNotFound } from '@utils';
 import { useTranslation } from 'react-i18next';
 import { CheckCircleIcon, WarningIcon } from '@chakra-ui/icons';
 import { useReportDownloadState } from '@hooks/useReportDownloadState';
+import { PreventableButton } from '@components/interface/PreventableButton';
 
 const settlementStatementReportHelper = new SettlementStatementReportHelper()
 const initialFileName = 'DFSPSettlementStatementReport'
@@ -49,7 +50,6 @@ const SettlementStatementReport = () => {
   const toast = useToast();
   const { t } = useTranslation();
   const [runButtonState, setRunButtonState] = useState(true);
-  const readyToastId = 'dfsp-settlement-statement-report-ready';
 
   const { data: participantList } = useGetParticipantList();
 
@@ -63,27 +63,8 @@ const SettlementStatementReport = () => {
 
   const { downloadStatus, isDownloading, readyFile, failedMessage, startPolling, consumeDownload, clearDownloadState } = useReportDownloadState(
     'DFSPSettlementStatementReport',
-    (_fileName) => {
-      if (!toast.isActive(readyToastId)) {
-        toast({
-          id: readyToastId,
-          position: 'top',
-          description: `Your DFSP Settlement Statement Report is ready.`,
-          status: 'success',
-          isClosable: true,
-          duration: 5000,
-        });
-      }
-    },
-    (error: IApiErrorResponse) => {
-      toast({
-        position: 'top',
-        description: getErrorMessage(error) || 'Failed to request report',
-        status: 'error',
-        isClosable: true,
-        duration: 10000,
-      });
-    }
+    () => {}, // Toast handled globally in App.tsx
+    () => {} // Toast handled globally in App.tsx
   );
 
   const { data: currencyList } = useGetParticipantCurrencyList();
@@ -91,6 +72,7 @@ const SettlementStatementReport = () => {
   const isHubUser =
     typeof user.data?.participantName === 'string' &&
     user.data.participantName.toLowerCase() === 'hub';
+
 
   const onDownloadClick = async () => {
     if (!isValid) {
@@ -464,14 +446,14 @@ const SettlementStatementReport = () => {
               </Text>
             </Box>
           </HStack>
-          <Button
-            size="sm"
-            colorScheme="green"
-            flexShrink={0}
-            onClick={consumeDownload}
-          >
-            Click to Download
-          </Button>
+            <PreventableButton
+              size="sm"
+              colorScheme="green"
+              flexShrink={0}
+              onClick={consumeDownload}
+            >
+              Click to Download
+            </PreventableButton>
         </HStack>
       )}
 

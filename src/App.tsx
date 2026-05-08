@@ -35,7 +35,7 @@ function App() {
     }
   }
 
-  const handleError = (error: any) => {
+  const handleError = (reportName: string, error:any ) => {
     toast({
       position: 'top',
       description: getErrorMessage(error) || 'Failed to request report',

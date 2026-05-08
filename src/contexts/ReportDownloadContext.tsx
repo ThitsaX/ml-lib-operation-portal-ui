@@ -480,8 +480,8 @@ export const ReportDownloadProvider: React.FC<ReportDownloadProviderProps> = ({
     const downloadBlob = async (url: string) => {
       const resp = await fetch(url);
       if (resp.status === 403) {
-        const error = new Error('LINK_EXPIRED');
-        (error as any).code = 'LINK_EXPIRED';
+        const error = new Error('FILE_EXPIRED');
+        (error as any).code = 'FILE_EXPIRED';
         throw error;
       }
       if (!resp.ok) {
@@ -497,12 +497,12 @@ export const ReportDownloadProvider: React.FC<ReportDownloadProviderProps> = ({
         updateReportState(reportName, { downloadStatus: 'IDLE', readyFile: null, failedMessage: null });
       })
       .catch(err => {
-        if ((err as any)?.code === 'LINK_EXPIRED') {
+        if ((err as any)?.code === 'FILE_EXPIRED') {
           if (onErrorRef.current) {
             onErrorRef.current(reportName, {
-              description: 'The download link has expired. Please generate the report again.',
+              description: 'The download file has expired and is no longer available, please try again to download.',
               default_error_message: '',
-              error_code: 'LINK_EXPIRED',
+              error_code: 'FILE_EXPIRED',
             });
           }
         } else {

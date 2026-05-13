@@ -91,6 +91,11 @@ export const privateRoutes = {
   getDisputeLink: '/secured/getDisputeLink',
   getReportDownloadStatus: '/secured/getReportDownloadStatus',
   getReportDownloadUrl: '/secured/getReportDownloadUrl',
+
+  getRoleList: '/secured/getRoleList',
+  getActionListByRole: '/secured/getActionListByRole',
+  createRole: '/secured/createRole',
+  modifyRoleGrantList: '/secured/modifyRoleGrantList',
 };
 
 const routes = {

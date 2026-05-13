@@ -9,7 +9,10 @@ import {
   type IParticipant,
   IParticipantUserRole,
   IParticipantOrganization,
-  type IParticipantPositionData
+  type IParticipantPositionData,
+  type IAction,
+  type ICreateRoleRequest, 
+  type IModifyRoleGrantListRequest
 } from '@typescript/services'
 import { type ICreateUserValues, type IModifyUserValues, type IResetPasswordValues } from '@typescript/form'
 import { type AxiosError } from 'axios'
@@ -17,6 +20,12 @@ import { IApprovalRequest } from '@typescript/services'
 
 type ParticipantProfileApi = Omit<IParticipantProfile, 'connectedParticipants'> & {
   connectedParticipants: IParticipant[]
+}
+
+const parseJsonWithLargeIntegersAsStrings = (data: string) => {
+  if (!data) return data
+
+  return JSON.parse(data.replace(/:\s*(-?\d{16,})(?=[,\]}])/g, ': "$1"'))
 }
 
 const formatConnectedParticipants = (value: IParticipant[]): string => {
@@ -230,6 +239,132 @@ export const getRoleListByParticipant = async (participantName: string) => {
       }
     })
     .then((d) => d.data.roleList)
+    .catch((error: AxiosError<IApiErrorResponse>) => {
+      const { code, message, ...rest } = axiosErrorHandler(error)
+      if (code && message) {
+        throw {
+          error_code: code,
+          default_error_message: getErrorMessageByCode(code),
+          i18n_error_messages: null
+        }
+      }
+      throw rest
+    })
+}
+
+export const getActionListByRole = async (roleId: string) => {
+  const {
+    user: { auth, data }
+  } = store.getState()
+  const uri = routes.getActionListByRole
+  const accessKey = auth?.accessKey as string
+  const secretKey = auth?.secretKey as string
+  const accessToken = await generateAccessToken({
+    method: 'GET',
+    uri,
+    secret: secretKey
+  })
+  const { axios } = AxiosRequest(accessToken, accessKey)
+  return axios
+    .get<{actionOptionList : IAction[] }>(uri, {
+      params: {
+        roleId: roleId
+      },
+      transformResponse: [parseJsonWithLargeIntegersAsStrings]
+    })
+    .then((d) => d.data.actionOptionList)
+    .catch((error: AxiosError<IApiErrorResponse>) => {
+      const { code, message, ...rest } = axiosErrorHandler(error)
+      if (code && message) {
+        throw {
+          error_code: code,
+          default_error_message: getErrorMessageByCode(code),
+          i18n_error_messages: null
+        }
+      }
+      throw rest
+    })
+}
+
+export const getRoleList = async () => {
+  const {
+    user: { auth, data }
+  } = store.getState()
+  const uri = routes.getRoleList
+  const accessKey = auth?.accessKey as string
+  const secretKey = auth?.secretKey as string
+  const accessToken = await generateAccessToken({
+    method: 'GET',
+    uri,
+    secret: secretKey
+  })
+  const { axios } = AxiosRequest(accessToken, accessKey)
+  return axios
+    .get<{ roleList: IParticipantUserRole[] }>(uri, {
+  
+    })
+    .then((d) => d.data.roleList)
+    .catch((error: AxiosError<IApiErrorResponse>) => {
+      const { code, message, ...rest } = axiosErrorHandler(error)
+      if (code && message) {
+        throw {
+          error_code: code,
+          default_error_message: getErrorMessageByCode(code),
+          i18n_error_messages: null
+        }
+      }
+      throw rest
+    })
+}
+
+
+export const createRole = async (data: ICreateRoleRequest) => {
+  const {
+    user: { auth }
+  } = store.getState()
+  const uri = routes.createRole
+  const accessKey = auth?.accessKey as string
+  const secretKey = auth?.secretKey as string
+  const accessToken = await generateAccessToken({
+    method: 'POST',
+    uri,
+    secret: secretKey,
+    payload: data
+  })
+  const { axios } = AxiosRequest(accessToken, accessKey)
+  return axios
+    .post<{ is_created: true }>(uri, data)
+    .then((d) => d.data)
+    .catch((error: AxiosError<IApiErrorResponse>) => {
+      const { code, message, ...rest } = axiosErrorHandler(error)
+      if (code && message) {
+        throw {
+          error_code: code,
+          default_error_message: getErrorMessageByCode(code),
+          i18n_error_messages: null
+        }
+      }
+      throw rest
+    })
+}
+
+export const modifyRoleGrantList = async (data: IModifyRoleGrantListRequest) => {
+  const {
+    user: { auth }
+  } = store.getState()
+  const uri = routes.modifyRoleGrantList
+  const accessKey = auth?.accessKey as string
+  const secretKey = auth?.secretKey as string
+  const accessToken = await generateAccessToken({
+    method: 'POST',
+    uri,
+    secret: secretKey,
+    payload: data
+  })
+  const { axios } = AxiosRequest(accessToken, accessKey)
+  return axios
+    .post<{ modified: true }>(uri, data)
+    .then((d) => d.data)
     .catch((error: AxiosError<IApiErrorResponse>) => {
       const { code, message, ...rest } = axiosErrorHandler(error)
       if (code && message) {

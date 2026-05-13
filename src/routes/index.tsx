@@ -19,6 +19,7 @@ import SupportCenter from '@pages/SupportCenter';
 import ParticipantPositionDetails from '@pages/Participant/ParticipantPositionDetails';
 import { FinalizeSettlement, SettlementModels, SettlementWindows } from '@pages/Settlement';
 import ProtectedRoute from "./ProtectedRoute";
+import SystemAdmin from '@pages/SystemAdmin';
 
 export const router = createBrowserRouter([
   {
@@ -250,6 +251,24 @@ export const router = createBrowserRouter([
         path: 'audit',
         caseSensitive: true,
         element: <Audit />
+      },
+
+      // System Admin Routes
+      {
+        path: "system-admin",
+        element: (
+          <ProtectedRoute allowedMenuId="system_admin">
+            <SystemAdmin />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "system-admin/:roleId",
+        element: (
+          <ProtectedRoute allowedMenuId="system_admin">
+            <SystemAdmin />
+          </ProtectedRoute>
+        ),
       }
     ]
   },

@@ -457,5 +457,7 @@
   "ui.update_schedule": "Mettre à jour la planification",
   "ui.use_case": "Cas d'usage",
   "ui.view_list": "Voir la liste",
-  "ui.yes": "Oui"
+  "ui.yes": "Oui",
+  "ui.save_all_changes": "Enregistrer toutes les modifications",
+  "ui.discard_changes": "Annuler les modifications"
 }

@@ -10,7 +10,6 @@
   "ui.return_home": "Retour à l'accueil",
   "ui.settlement": "Règlement",
   "ui.transfers": "Transferts",
-
   // Auth
   "ui.change_password": "Changer le mot de passe",
   "ui.confirm_password": "Confirmer le mot de passe*",
@@ -28,12 +27,10 @@
   "ui.show_password_aria": "Afficher le mot de passe",
   "ui.sign_in": "Se connecter",
   "ui.sign_in_to_your_account": "Connectez-vous à votre compte",
-
   // Home
   "ui.home": "Accueil",
   "ui.latest_announcement": "Dernière annonce",
   "ui.welcome_to_the_operation_portal": "Bienvenue sur le Portail opérationnel !",
-
   // User Management
   "ui.add_new_user": "Ajouter un nouvel utilisateur",
   "ui.edit_user": "Modifier l'utilisateur",
@@ -55,7 +52,6 @@
   "ui.user_management": "Gestion des utilisateurs",
   "ui.user_status_updated_successfully": "Statut utilisateur mis à jour avec succès",
   "ui.user_updated_successfully": "Utilisateur mis à jour avec succès",
-
   // Participant
   "ui.account_name": "Nom du compte",
   "ui.account_name_is_required": "Le nom du compte est requis",
@@ -95,7 +91,6 @@
   "ui.sync_participant": "Synchroniser le participant",
   "ui.view_focal_contacts_for_support": "Voir les contacts clés pour le support",
   "ui.contacts": "Contacts",
-
   // Transfer
   "ui.cannot_retrieve_net_transfer_amount": "Impossible de récupérer le montant net du transfert",
   "ui.payee_dfsp_commission": "Commission DFSP bénéficiaire",
@@ -123,7 +118,6 @@
   "ui.id_type": "Type d'identifiant",
   "ui.id_value": "Valeur d'identifiant",
   "ui.sub_scenario": "Sous-scénario",
-
   // Settlement
   "ui.auto_close_disabled": "Fermeture automatique désactivée",
   "ui.auto_close_enabled": "Fermeture automatique activée",
@@ -156,7 +150,6 @@
   "ui.settlement_window_closed_successfully": "Fenêtre de règlement fermée avec succès",
   "ui.settlement_windows": "Fenêtres de règlement",
   "ui.window_id": "ID de fenêtre",
-
   // Reports
   "ui.audit_report": "Rapport d'audit",
   "ui.choose_format": "Choisir le format",
@@ -165,7 +158,6 @@
   "ui.pdf": "PDF",
   "ui.transaction_detail_report": "Rapport détaillé des transactions",
   "ui.xlsx": "XLSX",
-
   // Support Center
   "ui.content_type_not_supported": "Type de contenu non pris en charge",
   "ui.contact_list": "Liste des contacts",
@@ -178,7 +170,6 @@
   "ui.submit_dispute": "Soumettre un litige",
   "ui.support_center": "Centre de support",
   "ui.this_feature_is_currently_unavailable": "Cette fonctionnalité est actuellement indisponible.",
-
   // Forms Validation
   "ui.currency_is_required": "La devise est requise",
   "ui.email_is_required": "L'e-mail est requis",
@@ -201,7 +192,6 @@
   "ui.should_be_less_than_end_date": "Doit être inférieur à la date de fin",
   "ui.should_be_less_than_to_date": "Doit être inférieur à la date de fin",
   "ui.to_date_must_not_earlier_than_from_date": "La date de fin ne doit pas être antérieure à la date de début",
-
   // Feedback Messages
   "ui.an_unexpected_error_occurred": "Une erreur inattendue est survenue",
   "ui.an_unknown_error_occurred": "Une erreur inconnue est survenue",
@@ -224,13 +214,11 @@
   "ui.settlement_model_not_found_or_missing_id": "Modèle de règlement introuvable ou identifiant manquant.",
   "ui.toggle_failed": "Échec du basculement",
   "ui.update_failed": "Échec de la mise à jour",
-
   // Accessibility
   "ui.skip_to_end": "Aller à la fin",
   "ui.skip_to_start": "Aller au début",
   "ui.toggle_sidebar": "Afficher/Masquer la barre latérale",
   "ui.toggle_sidebar_aria": "Afficher/Masquer la barre latérale",
-
   // Shared
   // Shared Core
   "ui.add": "Ajouter",
@@ -327,7 +315,6 @@
   "ui.payee_dfsp_id": "ID DFSP bénéficiaire",
   "ui.payee_dfsp_name": "Nom DFSP bénéficiaire",
   "ui.loading": "Chargement",
-
   // Shared Settlement Scheduler Labels
   "ui.daily": "Quotidien",
   "ui.weekdays": "Jours ouvrables",
@@ -383,7 +370,6 @@
   "ui.delete_schedule_question": "Supprimer la planification ?",
   "ui.are_you_sure_you_want_to_delete": "Voulez-vous vraiment supprimer",
   "ui.this_action_cannot_be_undone": "Cette action est irréversible",
-
   // Shared Participant Position Labels
   "ui.balance": "Solde",
   "ui.current_position": "Position actuelle",
@@ -412,7 +398,6 @@
   "ui.amount_is_invalid_this_transaction_amount_results_in_ndc_lower_than_the_current_position": "Montant invalide. Ce montant de transaction entraîne un NDC inférieur à la position actuelle.",
   "ui.ndc_value_cannot_be_lower_than_the_current_position": "La valeur NDC ne peut pas être inférieure à la position actuelle.",
   "ui.ndc_value_cannot_exceed_the_participants_balance": "La valeur NDC ne peut pas dépasser le solde du participant.",
-
   // Shared Settlement Window Labels
   "ui.close_window": "Fermer la fenêtre",
   "ui.create_settlement": "Créer un règlement",
@@ -442,7 +427,6 @@
   "ui.created_date": "Date de création",
   "ui.finalized_date": "Date de finalisation",
   "ui.please_contact_the_system_administrator_or_check_configuration_settings": "Veuillez contacter l'administrateur système ou vérifier les paramètres de configuration.",
-
   // Shared Admin / Approval Labels
   "ui.organization": "Organisation",
   "ui.organization_profile": "Profil de l'organisation",
@@ -462,7 +446,6 @@
   "ui.reject": "Rejeter",
   "ui.are_you_sure_you_want_to": "Voulez-vous vraiment",
   "ui.the_request_from": "la demande de",
-
   // Shared Form Entity Labels
   "ui.active": "Actif",
   "ui.inactive": "Inactif",
@@ -476,7 +459,6 @@
   "ui.address": "Adresse",
   "ui.description": "Description",
   "ui.logo": "Logo",
-
   // Shared Profile & Funding Labels
   "ui.old_password": "Ancien mot de passe",
   "ui.new_password": "Nouveau mot de passe",
@@ -492,11 +474,13 @@
   "ui.loading_dfsp_list": "Chargement de la liste DFSP",
   "ui.loading_contact_list": "Chargement de la liste des contacts...",
   "ui.loading_transfer_details": "Chargement des détails du transfert...",
-
   // Shared Actions
   "ui.update": "Mettre à jour",
   "ui.update_schedule": "Mettre à jour la planification",
   "ui.use_case": "Cas d'usage",
   "ui.view_list": "Voir la liste",
-  "ui.yes": "Oui"
+  "ui.yes": "Oui",
+
+  "ui.save_all_changes": "Enregistrer toutes les modifications",
+  "ui.discard_changes": "Annuler les modifications"
 }

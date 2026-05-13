@@ -1,0 +1,154 @@
+import {
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  VStack,
+  HStack,
+  Text,
+  Input,
+  FormControl,
+  FormLabel,
+  Switch,
+  Box,
+  Flex,
+  useToast,
+} from '@chakra-ui/react';
+import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { createRole } from '@services/participant';
+import { IApiErrorResponse } from '@typescript/services';
+import { getErrorMessage } from '@helpers/errors';
+
+interface AddNewModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess?: () => void;
+}
+
+const AddNewModal = ({ isOpen, onClose, onSuccess }: AddNewModalProps) => {
+  const toast = useToast();
+  const queryClient = useQueryClient();
+  const [roleName, setRoleName] = useState('');
+  const [isDfsp, setIsDfsp] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const isRoleNameEmpty = !roleName.trim();
+
+  const handleSubmit = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
+    try {
+      await createRole({
+        name: roleName.trim(),
+        isDfsp,
+      });
+      await queryClient.invalidateQueries({ queryKey: ['getRoleList'] });
+      toast({
+        title: 'Role Created',
+        description: `Role "${roleName}" has been created successfully.`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      resetForm();
+      onSuccess?.();
+      onClose();
+    } catch (err: any) {
+      const error = err as IApiErrorResponse
+      toast({
+        title: 'Error',
+        description: getErrorMessage(error),
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
+
+  const resetForm = () => {
+    setRoleName('');
+    setIsDfsp(false);
+  };
+
+  return (
+    <Modal isOpen={isOpen} onClose={handleClose} size="lg">
+      <ModalOverlay />
+      <ModalContent as="form" onSubmit={handleSubmit}>
+        <ModalHeader>
+          <HStack spacing={2}>
+            <Text>Add New Role</Text>
+          </HStack>
+        </ModalHeader>
+        <ModalCloseButton />
+
+        <ModalBody>
+          <VStack spacing={4} align="stretch">
+            <FormControl isRequired>
+              <FormLabel>Role name</FormLabel>
+              <Input
+                placeholder="e.g. dataAnalyst"
+                value={roleName}
+                onChange={(e) => setRoleName(e.target.value)}
+                autoFocus
+              />
+            </FormControl>
+
+            <Box
+              p={4}
+              bg="gray.50"
+              borderRadius="lg"
+              border="1px solid"
+              borderColor="gray.200"
+            >
+              <FormControl display="flex" alignItems="center" justifyContent="space-between">
+                <VStack align="flex-start" spacing={1}>
+                  <FormLabel mb="0" fontWeight="semibold" color="gray.800">
+                    Is DFSP Role
+                  </FormLabel>
+                  <Text fontSize="sm" color="gray.500">
+                    Enable if this role represents a DFSP participant
+                  </Text>
+                </VStack>
+                <Switch
+                  colorScheme="blue"
+                  size="lg"
+                  isChecked={isDfsp}
+                  onChange={(e) => setIsDfsp(e.target.checked)}
+                />
+              </FormControl>
+            </Box>
+          </VStack>
+        </ModalBody>
+
+        <ModalFooter>
+          <Flex justify="flex-end" align="center" gap={3} w="full">
+            <Button variant="outline" onClick={handleClose}>
+              Cancel
+            </Button>
+            <Button
+              colorScheme="blue"
+              isLoading={isLoading}
+              isDisabled={isRoleNameEmpty}
+              loadingText="Creating..."
+            >
+              Create role
+            </Button>
+          </Flex>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+export default AddNewModal;

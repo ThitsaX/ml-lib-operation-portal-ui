@@ -8,5 +8,6 @@ export interface IApiErrorResponse {
 export interface I18nErrorMessages {
   en: string
   fr?: string
+  pt?: string
   [lang: string]: string | undefined
 }

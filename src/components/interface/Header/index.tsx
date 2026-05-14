@@ -174,12 +174,12 @@ const Header = () => {
                 </PopoverHeader>
                 <PopoverBody>
                   <VStack spacing={3} align="stretch">
-                    {/* <Box>
+                    <Box>
                       <Text fontSize="sm" color="gray.600" mb={1}>
                         {t('ui.language')}
                       </Text>
                       <LanguageDropdown size="xs" showCode={true} showName={false} />
-                    </Box> */}
+                    </Box>
                     <Box>
                       <Text fontSize="sm" color="gray.600" mb={1}>
                         {t('ui.timezone')}

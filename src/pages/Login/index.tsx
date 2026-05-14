@@ -106,9 +106,9 @@ const Login = () => {
           p="5"
           spacing="3"
           zIndex={1}>
-          {/* <HStack justify="flex-end">
+          <HStack justify="flex-end">
             <LanguageDropdown size="xs" showCode={true} showName={false} />
-          </HStack> */}
+          </HStack>
           <Box>
             <Heading color="trueGray.600" fontSize="m" textAlign="center">
               {t('ui.sign_in_to_your_account')}

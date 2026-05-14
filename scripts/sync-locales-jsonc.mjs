@@ -8,7 +8,8 @@ const localeDir = resolve(root, 'src/locales');
 
 const localeMappings = [
   ['en.ui.grouped.jsonc', 'en.json'],
-  ['fr.ui.grouped.jsonc', 'fr.json']
+  ['fr.ui.grouped.jsonc', 'fr.json'],
+  ['pt.ui.grouped.jsonc', 'pt.json']
 ];
 
 const stripJsonComments = (text) => {

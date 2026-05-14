@@ -70,14 +70,17 @@ const parseJsoncObject = (fileName) => {
 
 const en = parseJsoncObject('en.ui.grouped.jsonc');
 const fr = parseJsoncObject('fr.ui.grouped.jsonc');
+const pt = parseJsoncObject('pt.ui.grouped.jsonc');
 
 const enKeys = new Set(Object.keys(en));
 const frKeys = new Set(Object.keys(fr));
+const ptKeys = new Set(Object.keys(pt));
 
 const missingInFr = [...enKeys].filter((key) => !frKeys.has(key)).sort();
 const missingInEn = [...frKeys].filter((key) => !enKeys.has(key)).sort();
+const missingInPt = [...ptKeys].filter((key) => !ptKeys.has(key)).sort();
 
-if (missingInFr.length > 0 || missingInEn.length > 0) {
+if (missingInFr.length > 0 || missingInEn.length > 0 || missingInPt.length > 0) {
   if (missingInFr.length > 0) {
     console.error('Missing in fr.ui.grouped.jsonc:');
     for (const key of missingInFr) console.error(`  - ${key}`);
@@ -85,6 +88,10 @@ if (missingInFr.length > 0 || missingInEn.length > 0) {
   if (missingInEn.length > 0) {
     console.error('Missing in en.ui.grouped.jsonc:');
     for (const key of missingInEn) console.error(`  - ${key}`);
+  }
+  if (missingInPt.length > 0) {
+    console.error('Missing in pt.ui.grouped.jsonc:');
+    for (const key of missingInPt) console.error(`  - ${key}`);
   }
   process.exit(1);
 }

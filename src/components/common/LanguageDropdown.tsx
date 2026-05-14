@@ -16,7 +16,8 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 // Language display codes
 const LANGUAGE_CODES: Record<supportedLngs, string> = {
   en: 'EN',
-  fr: 'FR'
+  fr: 'FR',
+  pt: 'PT'
 };
 
 interface LanguageDropdownProps extends Omit<ButtonProps, 'onClick' | 'children'> {

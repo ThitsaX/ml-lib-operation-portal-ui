@@ -81,6 +81,7 @@
   "ui.select_contact_type": "Selecionar Tipo de Contato",
   "ui.select_currency": "Selecionar Moeda",
   "ui.settlement_bank_report": "Relatório do Banco de Liquidação",
+  "ui.settlement_bank_report_usecase": "Relatório do Banco de Liquidação (Caso de Uso)",
   "ui.support_contacts": "Contatos de Suporte",
   "ui.sync_participant": "Sincronizar Participante",
   "ui.view_focal_contacts_for_support": "Ver contatos focais para suporte",
@@ -145,6 +146,7 @@
   "ui.audit_report": "Relatório de Auditoria",
   "ui.choose_format": "Escolher Formato",
   "ui.management_summary_report": "Relatório de Resumo Gerencial",
+  "ui.transfer_settlement_report": "Relatório de Liquidação de Transferência MT 971",
   "ui.pdf": "PDF",
   "ui.transaction_detail_report": "Relatório de Detalhes da Transação",
   "ui.xlsx": "XLSX",
@@ -245,6 +247,8 @@
   "ui.go_previous": "Anterior",
   "ui.loading_audit_details": "Carregando detalhes da auditoria...",
   "ui.logo_preview": "Pré-visualização do Logo",
+  "ui.connectionType": "Tipo de Conexão",
+  "ui.connectedParticipants": "Patrocinador / Participantes Patrocinados",
   "ui.made_by": "Feito por",
   "ui.new_status": "Novo status:",
   "ui.no": "Não",
@@ -453,5 +457,7 @@
   "ui.update_schedule": "Atualizar agendamento",
   "ui.use_case": "Caso de Uso",
   "ui.view_list": "Ver Lista",
-  "ui.yes": "Sim"
+  "ui.yes": "Sim",
+  "ui.save_all_changes": "Salvar Todas as Alterações",
+  "ui.discard_changes": "Descartar Alterações"
 }

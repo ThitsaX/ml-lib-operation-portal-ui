@@ -2,14 +2,15 @@
   // Navigation
   "ui.logout": "Déconnexion",
   "ui.operation_portal": "Portail Opérationnel",
-  "ui.operational_portal": "Portail Opérationnel",
+  "ui.operational_portal": "Portail des opérations",
   "ui.participant": "Participant",
-  "ui.pending_approvals": "Validations en attente",
+  "ui.pending_approvals": "Approbations en attente",
   "ui.powered_by": "Propulsé par",
   "ui.reports": "Rapports",
   "ui.return_home": "Retour à l'accueil",
   "ui.settlement": "Règlement",
   "ui.transfers": "Transferts",
+
   // Auth
   "ui.change_password": "Changer le mot de passe",
   "ui.confirm_password": "Confirmer le mot de passe*",
@@ -27,10 +28,12 @@
   "ui.show_password_aria": "Afficher le mot de passe",
   "ui.sign_in": "Se connecter",
   "ui.sign_in_to_your_account": "Connectez-vous à votre compte",
+
   // Home
   "ui.home": "Accueil",
   "ui.latest_announcement": "Dernière annonce",
   "ui.welcome_to_the_operation_portal": "Bienvenue sur le Portail opérationnel !",
+
   // User Management
   "ui.add_new_user": "Ajouter un nouvel utilisateur",
   "ui.edit_user": "Modifier l'utilisateur",
@@ -41,7 +44,7 @@
   "ui.job_title": "Intitulé du poste",
   "ui.last_name": "Nom*",
   "ui.last_name_is_required": "Le nom est requis",
-  "ui.organization_is_required": "L'organisation est requise",
+  "ui.organization_is_required": "L'organisation est obligatoire",
   "ui.select_at_least_one_role": "Sélectionnez au moins un rôle",
   "ui.select_organization": "Sélectionner l'organisation*",
   "ui.select_role": "Sélectionner le rôle*",
@@ -52,6 +55,7 @@
   "ui.user_management": "Gestion des utilisateurs",
   "ui.user_status_updated_successfully": "Statut utilisateur mis à jour avec succès",
   "ui.user_updated_successfully": "Utilisateur mis à jour avec succès",
+
   // Participant
   "ui.account_name": "Nom du compte",
   "ui.account_name_is_required": "Le nom du compte est requis",
@@ -86,11 +90,12 @@
   "ui.select_contact_type": "Sélectionner le type de contact",
   "ui.select_currency": "Sélectionner la devise",
   "ui.settlement_bank_report": "Rapport bancaire de règlement",
-  "ui.settlement_bank_report_usecase": "Rapport bancaire de règlement (détaillé)",
+  "ui.settlement_bank_report_usecase": "Cas d’utilisation du rapport de banque de règlement",
   "ui.support_contacts": "Contacts de support",
   "ui.sync_participant": "Synchroniser le participant",
   "ui.view_focal_contacts_for_support": "Voir les contacts clés pour le support",
   "ui.contacts": "Contacts",
+
   // Transfer
   "ui.cannot_retrieve_net_transfer_amount": "Impossible de récupérer le montant net du transfert",
   "ui.payee_dfsp_commission": "Commission DFSP bénéficiaire",
@@ -118,6 +123,7 @@
   "ui.id_type": "Type d'identifiant",
   "ui.id_value": "Valeur d'identifiant",
   "ui.sub_scenario": "Sous-scénario",
+
   // Settlement
   "ui.auto_close_disabled": "Fermeture automatique désactivée",
   "ui.auto_close_enabled": "Fermeture automatique activée",
@@ -150,14 +156,16 @@
   "ui.settlement_window_closed_successfully": "Fenêtre de règlement fermée avec succès",
   "ui.settlement_windows": "Fenêtres de règlement",
   "ui.window_id": "ID de fenêtre",
+
   // Reports
   "ui.audit_report": "Rapport d'audit",
   "ui.choose_format": "Choisir le format",
   "ui.management_summary_report": "Rapport de synthèse de gestion",
-  "ui.transfer_settlement_report": "Rapport de règlement des transferts MT 971",
+  "ui.transfer_settlement_report": "Rapport de règlement de transfert MT 971",
   "ui.pdf": "PDF",
   "ui.transaction_detail_report": "Rapport détaillé des transactions",
   "ui.xlsx": "XLSX",
+
   // Support Center
   "ui.content_type_not_supported": "Type de contenu non pris en charge",
   "ui.contact_list": "Liste des contacts",
@@ -165,33 +173,35 @@
   "ui.dispute": "Litige",
   "ui.fetching_dispute_link_please_wait": "Récupération du lien de litige... Veuillez patienter.",
   "ui.fetching_service_request_link_please_wait": "Récupération du lien de demande de service... Veuillez patienter.",
-  "ui.raise_an_issue_or_challenge": "Signaler un problème ou un litige",
+  "ui.raise_an_issue_or_challenge": "Signaler un problème ou une contestation",
   "ui.service_request": "Demande de service",
   "ui.submit_dispute": "Soumettre un litige",
-  "ui.support_center": "Centre de support",
+  "ui.support_center": "Centre d'assistance",
   "ui.this_feature_is_currently_unavailable": "Cette fonctionnalité est actuellement indisponible.",
+
   // Forms Validation
   "ui.currency_is_required": "La devise est requise",
-  "ui.email_is_required": "L'e-mail est requis",
+  "ui.email_is_required": "L'adresse e-mail est requis",
   "ui.email_required": "E-mail*",
   "ui.end_date_must_not_earlier_than_start_date": "La date de fin ne doit pas être antérieure à la date de début",
   "ui.invalid_date": "Date invalide",
-  "ui.invalid_email": "E-mail invalide",
+  "ui.invalid_email": "Adresse e-mail invalide",
   "ui.invalid_file_type": "Type de fichier invalide",
   "ui.invalid_time": "Heure invalide",
   "ui.invalid_timezone": "Fuseau horaire invalide",
   "ui.mobile_is_required": "Le numéro mobile est requis",
   "ui.name_is_required": "Le nom est requis",
   "ui.position_is_required": "Le poste est requis",
-  "ui.select_date_and_time": "Sélectionner la date et l'heure",
-  "ui.select_dfsp": "Sélectionner DFSP",
-  "ui.select_status": "Sélectionner le statut",
-  "ui.select_timezone": "Sélectionner le fuseau horaire",
+  "ui.select_date_and_time": "Sélectionnez la date et l'heure",
+  "ui.select_dfsp": "Sélectionnez DFSP",
+  "ui.select_status": "Sélectionnez le statut",
+  "ui.select_timezone": "Sélectionnez le fuseau horaire",
   "ui.should_be_greater_than_from_date": "Doit être supérieur à la date de début",
   "ui.should_be_greater_than_start_date": "Doit être supérieur à la date de début",
   "ui.should_be_less_than_end_date": "Doit être inférieur à la date de fin",
   "ui.should_be_less_than_to_date": "Doit être inférieur à la date de fin",
   "ui.to_date_must_not_earlier_than_from_date": "La date de fin ne doit pas être antérieure à la date de début",
+
   // Feedback Messages
   "ui.an_unexpected_error_occurred": "Une erreur inattendue est survenue",
   "ui.an_unknown_error_occurred": "Une erreur inconnue est survenue",
@@ -200,7 +210,7 @@
   "ui.failed_to_download": "Échec du téléchargement",
   "ui.failed_to_fetch_audit_details": "Échec de la récupération des détails d'audit",
   "ui.failed_to_fetch_data": "Échec de la récupération des données",
-  "ui.failed_to_fetch_pending_approvals": "Échec de la récupération des validations en attente",
+  "ui.failed_to_fetch_pending_approvals": "Échec de la récupération des approbations en attente",
   "ui.failed_to_load_profile": "Échec du chargement du profil",
   "ui.failed_to_update_organization_profile": "Échec de la mise à jour du profil de l'organisation.",
   "ui.internal_error": "Erreur interne",
@@ -209,16 +219,18 @@
   "ui.no_liquidity_found": "Aucun profil de liquidité trouvé",
   "ui.no_contacts_found": "Aucun contact trouvé",
   "ui.profile_updated": "Profil mis à jour",
-  "ui.result_error": "Résultat erreur :",
+  "ui.result_error": "Erreur de résultat :",
   "ui.save_failed": "Échec de l'enregistrement",
   "ui.settlement_model_not_found_or_missing_id": "Modèle de règlement introuvable ou identifiant manquant.",
   "ui.toggle_failed": "Échec du basculement",
   "ui.update_failed": "Échec de la mise à jour",
+
   // Accessibility
   "ui.skip_to_end": "Aller à la fin",
   "ui.skip_to_start": "Aller au début",
   "ui.toggle_sidebar": "Afficher/Masquer la barre latérale",
   "ui.toggle_sidebar_aria": "Afficher/Masquer la barre latérale",
+
   // Shared
   // Shared Core
   "ui.add": "Ajouter",
@@ -234,7 +246,7 @@
   "ui.amount_type": "Type de montant",
   "ui.approve_request": "Approuver la demande",
   "ui.are_you_sure": "Êtes-vous sûr ?",
-  "ui.are_you_sure_you_want_to_delete_this_schedule": "Voulez-vous vraiment supprimer cette planification ?",
+  "ui.are_you_sure_you_want_to_delete_this_schedule": "Voulez-vous vraiment supprimer cette programme ?",
   "ui.audit_details": "Détails d'audit",
   "ui.automatically": "Automatiquement",
   "ui.at_least_one_must_be_on": "Au moins un doit être activé",
@@ -262,7 +274,7 @@
   "ui.loading_audit_details": "Chargement des détails d'audit...",
   "ui.logo_preview": "Aperçu du logo",
   "ui.connectionType": "Type de connexion",
-  "ui.connectedParticipants": "Sponsor / Participants parrainés",
+  "ui.connectedParticipants": "Participants parrains / participants parrainés",
   "ui.made_by": "Créé par",
   "ui.new_status": "Nouveau statut :",
   "ui.no": "Non",
@@ -315,6 +327,7 @@
   "ui.payee_dfsp_id": "ID DFSP bénéficiaire",
   "ui.payee_dfsp_name": "Nom DFSP bénéficiaire",
   "ui.loading": "Chargement",
+
   // Shared Settlement Scheduler Labels
   "ui.daily": "Quotidien",
   "ui.weekdays": "Jours ouvrables",
@@ -370,6 +383,7 @@
   "ui.delete_schedule_question": "Supprimer la planification ?",
   "ui.are_you_sure_you_want_to_delete": "Voulez-vous vraiment supprimer",
   "ui.this_action_cannot_be_undone": "Cette action est irréversible",
+
   // Shared Participant Position Labels
   "ui.balance": "Solde",
   "ui.current_position": "Position actuelle",
@@ -398,6 +412,7 @@
   "ui.amount_is_invalid_this_transaction_amount_results_in_ndc_lower_than_the_current_position": "Montant invalide. Ce montant de transaction entraîne un NDC inférieur à la position actuelle.",
   "ui.ndc_value_cannot_be_lower_than_the_current_position": "La valeur NDC ne peut pas être inférieure à la position actuelle.",
   "ui.ndc_value_cannot_exceed_the_participants_balance": "La valeur NDC ne peut pas dépasser le solde du participant.",
+
   // Shared Settlement Window Labels
   "ui.close_window": "Fermer la fenêtre",
   "ui.create_settlement": "Créer un règlement",
@@ -414,7 +429,7 @@
   "ui.debit": "Débit",
   "ui.credit": "Crédit",
   "ui.finalize": "Finaliser",
-  "ui.finalize_settlement": "Finaliser le règlement",
+  "ui.finalize_settlement": "Finalisez le règlement",
   "ui.finalize_settlement_id": "ID de règlement à finaliser :",
   "ui.are_you_sure_you_want_to_finalize": "Voulez-vous vraiment finaliser ?",
   "ui.yes_finalize": "Oui, finaliser",
@@ -427,6 +442,7 @@
   "ui.created_date": "Date de création",
   "ui.finalized_date": "Date de finalisation",
   "ui.please_contact_the_system_administrator_or_check_configuration_settings": "Veuillez contacter l'administrateur système ou vérifier les paramètres de configuration.",
+
   // Shared Admin / Approval Labels
   "ui.organization": "Organisation",
   "ui.organization_profile": "Profil de l'organisation",
@@ -446,6 +462,7 @@
   "ui.reject": "Rejeter",
   "ui.are_you_sure_you_want_to": "Voulez-vous vraiment",
   "ui.the_request_from": "la demande de",
+
   // Shared Form Entity Labels
   "ui.active": "Actif",
   "ui.inactive": "Inactif",
@@ -459,6 +476,7 @@
   "ui.address": "Adresse",
   "ui.description": "Description",
   "ui.logo": "Logo",
+
   // Shared Profile & Funding Labels
   "ui.old_password": "Ancien mot de passe",
   "ui.new_password": "Nouveau mot de passe",
@@ -469,17 +487,19 @@
   "ui.enter_percentage": "Saisir le pourcentage...",
   "ui.submit": "Soumettre",
   "ui.saving": "Enregistrement...",
-  "ui.adding": "Ajout...",
+  "ui.adding": "Ajouter...",
   "ui.loading_user_details": "Chargement des détails utilisateur...",
   "ui.loading_dfsp_list": "Chargement de la liste DFSP",
   "ui.loading_contact_list": "Chargement de la liste des contacts...",
   "ui.loading_transfer_details": "Chargement des détails du transfert...",
+
   // Shared Actions
   "ui.update": "Mettre à jour",
   "ui.update_schedule": "Mettre à jour la planification",
   "ui.use_case": "Cas d'usage",
   "ui.view_list": "Voir la liste",
   "ui.yes": "Oui",
+
 
   "ui.save_all_changes": "Enregistrer toutes les modifications",
   "ui.discard_changes": "Annuler les modifications"

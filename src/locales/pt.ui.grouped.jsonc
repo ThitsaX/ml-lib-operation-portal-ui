@@ -10,7 +10,6 @@
   "ui.return_home": "Voltar para o Início",
   "ui.settlement": "Liquidação",
   "ui.transfers": "Transferências",
-
   // Auth
   "ui.change_password": "Alterar Senha",
   "ui.confirm_password": "Confirmar Senha*",
@@ -28,12 +27,10 @@
   "ui.show_password_aria": "Mostrar Senha",
   "ui.sign_in": "Entrar",
   "ui.sign_in_to_your_account": "Entre na sua conta",
-
   // Home
   "ui.home": "Início",
   "ui.latest_announcement": "Último Anúncio",
   "ui.welcome_to_the_operation_portal": "Bem-vindo ao Portal de Operações!",
-
   // User Management
   "ui.add_new_user": "Adicionar Novo Usuário",
   "ui.edit_user": "Editar Usuário",
@@ -55,7 +52,6 @@
   "ui.user_management": "Gestão de Usuários",
   "ui.user_status_updated_successfully": "Status do usuário atualizado com sucesso",
   "ui.user_updated_successfully": "Usuário atualizado com sucesso",
-
   // Participant
   "ui.account_name": "Nome da Conta",
   "ui.account_name_is_required": "O nome da conta é obrigatório",
@@ -90,11 +86,11 @@
   "ui.select_contact_type": "Selecionar Tipo de Contato",
   "ui.select_currency": "Selecionar Moeda",
   "ui.settlement_bank_report": "Relatório do Banco de Liquidação",
+  "ui.settlement_bank_report_usecase": "Relatório do Banco de Liquidação (Caso de Uso)",
   "ui.support_contacts": "Contatos de Suporte",
   "ui.sync_participant": "Sincronizar Participante",
   "ui.view_focal_contacts_for_support": "Ver contatos focais para suporte",
   "ui.contacts": "Contatos",
-
   // Transfer
   "ui.cannot_retrieve_net_transfer_amount": "Não foi possível recuperar o valor líquido da transferência",
   "ui.payee_dfsp_commission": "Comissão DFSP do Beneficiário",
@@ -122,7 +118,6 @@
   "ui.id_type": "Tipo de ID",
   "ui.id_value": "Valor do ID",
   "ui.sub_scenario": "Subcenário",
-
   // Settlement
   "ui.auto_close_disabled": "Fechamento automático desativado",
   "ui.auto_close_enabled": "Fechamento automático ativado",
@@ -155,15 +150,14 @@
   "ui.settlement_window_closed_successfully": "Janela de Liquidação Fechada com Sucesso",
   "ui.settlement_windows": "Janelas de Liquidação",
   "ui.window_id": "ID da Janela",
-
   // Reports
   "ui.audit_report": "Relatório de Auditoria",
   "ui.choose_format": "Escolher Formato",
   "ui.management_summary_report": "Relatório de Resumo Gerencial",
+  "ui.transfer_settlement_report": "Relatório de Liquidação de Transferência MT 971",
   "ui.pdf": "PDF",
   "ui.transaction_detail_report": "Relatório de Detalhes da Transação",
   "ui.xlsx": "XLSX",
-
   // Support Center
   "ui.content_type_not_supported": "Tipo de conteúdo não suportado",
   "ui.contact_list": "Lista de Contatos",
@@ -176,7 +170,6 @@
   "ui.submit_dispute": "Enviar Disputa",
   "ui.support_center": "Centro de Suporte",
   "ui.this_feature_is_currently_unavailable": "Este recurso está indisponível no momento.",
-
   // Forms Validation
   "ui.currency_is_required": "A moeda é obrigatória",
   "ui.email_is_required": "O e-mail é obrigatório",
@@ -199,7 +192,6 @@
   "ui.should_be_less_than_end_date": "Deve ser menor que a data final",
   "ui.should_be_less_than_to_date": "Deve ser menor que a data final",
   "ui.to_date_must_not_earlier_than_from_date": "A data final não deve ser anterior à data inicial",
-
   // Feedback Messages
   "ui.an_unexpected_error_occurred": "Ocorreu um erro inesperado",
   "ui.an_unknown_error_occurred": "Ocorreu um erro desconhecido",
@@ -222,13 +214,11 @@
   "ui.settlement_model_not_found_or_missing_id": "Modelo de liquidação não encontrado ou ID ausente.",
   "ui.toggle_failed": "Falha na alternância",
   "ui.update_failed": "Falha na atualização",
-
   // Accessibility
   "ui.skip_to_end": "Pular para o fim",
   "ui.skip_to_start": "Pular para o início",
   "ui.toggle_sidebar": "Alternar barra lateral",
   "ui.toggle_sidebar_aria": "Alternar barra lateral",
-
   // Shared
   // Shared Core
   "ui.add": "Adicionar",
@@ -271,6 +261,8 @@
   "ui.go_previous": "Anterior",
   "ui.loading_audit_details": "Carregando detalhes da auditoria...",
   "ui.logo_preview": "Pré-visualização do Logo",
+  "ui.connectionType": "Tipo de Conexão",
+  "ui.connectedParticipants": "Patrocinador / Participantes Patrocinados",
   "ui.made_by": "Feito por",
   "ui.new_status": "Novo status:",
   "ui.no": "Não",
@@ -308,7 +300,6 @@
   "ui.to": "Para",
   "ui.toggle_row_id": "Alternar ID da linha:",
   "ui.trace_id": "ID de Rastreamento",
-
   // Shared Transfer Labels
   "ui.today": "Hoje",
   "ui.inbound": "Entrada",
@@ -324,7 +315,6 @@
   "ui.payee_dfsp_id": "ID DFSP do Beneficiário",
   "ui.payee_dfsp_name": "Nome DFSP do Beneficiário",
   "ui.loading": "Carregando",
-
   // Shared Settlement Scheduler Labels
   "ui.daily": "Diário",
   "ui.weekdays": "Dias úteis",
@@ -380,7 +370,6 @@
   "ui.delete_schedule_question": "Excluir agendamento?",
   "ui.are_you_sure_you_want_to_delete": "Tem certeza de que deseja excluir",
   "ui.this_action_cannot_be_undone": "Esta ação não pode ser desfeita",
-
   // Shared Participant Position Labels
   "ui.balance": "Saldo",
   "ui.current_position": "Posição Atual",
@@ -409,7 +398,6 @@
   "ui.amount_is_invalid_this_transaction_amount_results_in_ndc_lower_than_the_current_position": "Valor inválido. O valor desta transação resulta em um NDC inferior à Posição Atual.",
   "ui.ndc_value_cannot_be_lower_than_the_current_position": "O valor do NDC não pode ser inferior à Posição Atual.",
   "ui.ndc_value_cannot_exceed_the_participants_balance": "O valor do NDC não pode exceder o saldo do participante.",
-
   // Shared Settlement Window Labels
   "ui.close_window": "Fechar Janela",
   "ui.create_settlement": "Criar Liquidação",
@@ -439,7 +427,6 @@
   "ui.created_date": "Data de Criação",
   "ui.finalized_date": "Data de Finalização",
   "ui.please_contact_the_system_administrator_or_check_configuration_settings": "Entre em contato com o administrador do sistema ou verifique as configurações de configuração.",
-
   // Shared Admin / Approval Labels
   "ui.organization": "Organização",
   "ui.organization_profile": "Perfil da Organização",
@@ -459,7 +446,6 @@
   "ui.reject": "Rejeitar",
   "ui.are_you_sure_you_want_to": "Tem certeza de que deseja",
   "ui.the_request_from": "a solicitação de",
-
   // Shared Form Entity Labels
   "ui.active": "Ativo",
   "ui.inactive": "Inativo",
@@ -473,7 +459,6 @@
   "ui.address": "Endereço",
   "ui.description": "Descrição",
   "ui.logo": "Logo",
-
   // Shared Profile & Funding Labels
   "ui.old_password": "Senha Antiga",
   "ui.new_password": "Nova Senha",
@@ -489,11 +474,12 @@
   "ui.loading_dfsp_list": "Carregando lista de dfsp",
   "ui.loading_contact_list": "Carregando lista de contatos...",
   "ui.loading_transfer_details": "Carregando detalhes da transferência...",
-
   // Shared Actions
   "ui.update": "Atualizar",
   "ui.update_schedule": "Atualizar agendamento",
   "ui.use_case": "Caso de Uso",
   "ui.view_list": "Ver Lista",
-  "ui.yes": "Sim"
+  "ui.yes": "Sim",
+  "ui.save_all_changes": "Salvar Todas as Alterações",
+  "ui.discard_changes": "Descartar Alterações"
 }

@@ -1,17 +1,21 @@
 import React from "react";
 import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    ModalCloseButton,
-    VStack,
-    Text,
-    HStack,
+    Badge,
+    Box,
     Button,
+    HStack,
+    Icon,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    Text,
+    VStack,
 } from "@chakra-ui/react";
+import { FiArrowRight } from "react-icons/fi";
 
 interface Props {
     isOpen: boolean;
@@ -36,63 +40,86 @@ const PermissionChangesModal: React.FC<Props> = ({
     closeChangesModal,
     saveChanges,
 }) => {
+    const renderStatusBadge = (isSelected?: boolean) => (
+        <Badge
+            colorScheme={isSelected ? "green" : "gray"}
+            variant="subtle"
+            borderRadius="full"
+            px={2}
+            py={0.5}
+            fontSize="xs"
+            textTransform="none"
+        >
+            {isSelected ? "Selected" : "Not selected"}
+        </Badge>
+    );
+
     return (
         <Modal isOpen={isOpen} onClose={onClose} size="lg" isCentered>
             <ModalOverlay />
 
-            <ModalContent>
+            <ModalContent borderRadius="md">
                 <ModalHeader>Permission Changes</ModalHeader>
+                <ModalCloseButton />
 
                 <ModalBody>
-                    <VStack align="flex-start" spacing={4}>
+                    <VStack align="stretch" spacing={4}>
                         <Text fontSize="sm" color="gray.600">
-                            You have made {changesList.length} changes to permissions:
+                            Review {changesList.length} permission change{changesList.length === 1 ? "" : "s"} before saving.
                         </Text>
 
-                        <VStack align="flex-start" spacing={2} maxH="200" overflowY="auto">
+                        <VStack align="stretch" spacing={2} maxH="260px" overflowY="auto" pr={1}>
                             {changesList.map((changeId, index) => {
                                 const action = actions.find((a) => a.id === changeId);
-                                const originalAction = originalActions.find(
-                                    (a) => a.id === changeId
-                                );
-
+                                const originalAction = originalActions.find((a) => a.id === changeId);
                                 const isNowSelected = action?.selected;
                                 const wasOriginallySelected = originalAction?.selected;
 
                                 return (
-                                    <Text key={index} fontSize="sm" color="gray.700">
-                                        • {action?.name || changeId}:{" "}
-                                        {wasOriginallySelected ? "Selected" : "Not Selected"} →{" "}
-                                        {isNowSelected ? "Selected" : "Not Selected"}
-                                    </Text>
+                                    <Box
+                                        key={changeId || index}
+                                        border="1px solid"
+                                        borderColor="gray.200"
+                                        borderRadius="md"
+                                        bg="gray.50"
+                                        px={3}
+                                        py={2}
+                                    >
+                                        <HStack justify="space-between" align="center" spacing={3}>
+                                            <Text
+                                                fontSize="sm"
+                                                fontWeight="semibold"
+                                                color="gray.800"
+                                                noOfLines={2}
+                                                title={action?.name || changeId}
+                                            >
+                                                {action?.name || changeId}
+                                            </Text>
+
+                                            <HStack spacing={2} flexShrink={0}>
+                                                {renderStatusBadge(wasOriginallySelected)}
+                                                <Icon as={FiArrowRight} color="gray.400" boxSize={4} />
+                                                {renderStatusBadge(isNowSelected)}
+                                            </HStack>
+                                        </HStack>
+                                    </Box>
                                 );
                             })}
                         </VStack>
                     </VStack>
                 </ModalBody>
 
-                <ModalFooter>
+                <ModalFooter pt={4}>
                     <HStack spacing={3}>
-                        <Button
-                            variant="outline"
-                            onClick={closeChangesModal}
-                            isLoading={isLoading}
-                        >
+                        <Button variant="outline" onClick={closeChangesModal} isLoading={isLoading}>
                             Discard Changes
                         </Button>
 
-                        <Button
-                            colorScheme="blue"
-                            onClick={saveChanges}
-                            isLoading={isSaving}
-                            isDisabled={isSaving}
-                        >
+                        <Button colorScheme="blue" onClick={saveChanges} isLoading={isSaving} isDisabled={isSaving}>
                             Save Changes
                         </Button>
                     </HStack>
                 </ModalFooter>
-
-                <ModalCloseButton />
             </ModalContent>
         </Modal>
     );

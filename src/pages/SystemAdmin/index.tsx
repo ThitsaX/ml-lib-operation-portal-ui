@@ -9,62 +9,102 @@ import {
   InputLeftElement,
   SimpleGrid,
   Flex,
+  Box,
   useToast,
   useDisclosure,
   Heading,
   Spinner,
   Center,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
-import { FiAlertCircle, FiSearch } from 'react-icons/fi';
+import { FiAlertCircle, FiChevronDown, FiPlus, FiSearch } from 'react-icons/fi';
 import { Icon } from '@chakra-ui/react';
 import { modifyRoleGrantList } from '@services/participant';
 import { useSystemAdminRoles, useGetActionListByRole } from '@hooks/useSystemAdminRoles';
 import { useNavigate, useParams } from 'react-router-dom';
 import { type IApiErrorResponse } from '@typescript/services';
+import type { IParticipantUserRole } from '@typescript/services/participant';
 import { getErrorMessage } from '@helpers/errors';
 import { useTranslation } from 'react-i18next';
 import { PermissionCard, PaginationControls, PermissionChangesModal } from "@components/interface";
+import AddNewModal from '@components/interface/SideBar/AddNewModal';
 
+type PermissionAction = {
+  id: string;
+  name: string;
+  category: string;
+  selected: boolean;
+  mandatory: boolean;
+};
+
+const getActionCategory = (action: any) => (
+  action.category
+  ?? 'Uncategorized'
+);
 
 const RolePermissionPage = () => {
   const { t } = useTranslation();
-  const [actions, setActions] = useState<any[]>([]);
-  const [originalActions, setOriginalActions] = useState<any[]>([]);
+  const [actions, setActions] = useState<PermissionAction[]>([]);
+  const [originalActions, setOriginalActions] = useState<PermissionAction[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [changesList, setChangesList] = useState<string[]>([]);
   const [pageNumber, setPageNumber] = useState<string>('1');
   const [isSaving, setIsSaving] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isAddRoleOpen,
+    onOpen: onAddRoleOpen,
+    onClose: onAddRoleClose,
+  } = useDisclosure();
 
   const toast = useToast();
   const navigate = useNavigate();
   const { roleId: urlRoleId } = useParams<{ roleId: string }>();
 
-  const itemsPerPage = 16; // 4 rows × 4 columns
+  const itemsPerPage = 36;
 
   // Use the existing hook for role management
   const { roles, isLoading: isRolesLoading } = useSystemAdminRoles();
 
   // Find the current role name from hook's role list
-  const currentRole = roles?.find((role: any) => role.roleId === urlRoleId);
+  const currentRole = roles?.find((role: IParticipantUserRole) => role.roleId === urlRoleId);
   const currentRoleName = currentRole?.name || 'System Admin';
   const fallbackRoleId = roles?.[0]?.roleId;
   const hasRoles = Boolean(roles?.length);
   const isInvalidRoleId = Boolean(urlRoleId && roles && !currentRole);
 
   // Fetch actions based on selected role
-  const { data: roleActions, isLoading, isFetching } = useGetActionListByRole(urlRoleId ?? '', {
+  const { data: roleActions, isLoading, isFetching, isError: isActionsError, error: actionsError } = useGetActionListByRole(urlRoleId ?? '', {
     enabled: Boolean(urlRoleId && currentRole),
   });
+  const isActionsLoading = isLoading || isFetching;
 
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
 
+  const resetPermissionState = () => {
+    setActions([]);
+    setOriginalActions([]);
+    setChangesList([]);
+    setSearchTerm('');
+    setSelectedCategory('All');
+    setCurrentPageIndex(0);
+    setPageNumber('1');
+  };
+
+  useEffect(() => {
+    resetPermissionState();
+  }, [urlRoleId]);
+
   // Update actions when roleActions data is fetched
   useEffect(() => {
-    if (roleActions && Array.isArray(roleActions)) {
+    if (!isActionsLoading && !isActionsError && roleActions && Array.isArray(roleActions)) {
       const formattedActions = roleActions.map((action: any) => ({
         id: String(action.actionId.id),
         name: action.actionName,
+        category: getActionCategory(action),
         selected: action.selected,
         mandatory: action.mandatory
       }));
@@ -73,21 +113,34 @@ const RolePermissionPage = () => {
       // Reset pagination to page 1 when new role data loads
       setCurrentPageIndex(0);
       setPageNumber('1');
+      setSelectedCategory('All');
     }
-  }, [roleActions]);
+  }, [isActionsError, isActionsLoading, roleActions]);
 
-  const isActionsLoading = isLoading || isFetching;
+  useEffect(() => {
+    if (isActionsError) {
+      resetPermissionState();
+    }
+  }, [isActionsError]);
 
   // Filter actions based on search term
   const filteredData = useMemo(() => {
-    if (!searchTerm) return actions;
+    return actions.filter(action => {
+      const matchesSearch = !searchTerm || action.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === 'All' || action.category === selectedCategory;
 
-    return actions.filter(action =>
-      action.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [actions, searchTerm]);
+      return matchesSearch && matchesCategory;
+    });
+  }, [actions, searchTerm, selectedCategory]);
 
-  const paginatedData = isActionsLoading ? [] : filteredData;
+  const categoryOptions = useMemo(() => {
+    const sortedCategories = Array.from(new Set(actions.map((action) => action.category).filter(Boolean)))
+      .sort((a, b) => a.localeCompare(b));
+
+    return ['All', ...sortedCategories];
+  }, [actions]);
+
+  const paginatedData = isActionsLoading || isActionsError ? [] : filteredData;
 
   // Reset pagination when loading state changes to true
   useEffect(() => {
@@ -122,6 +175,21 @@ const RolePermissionPage = () => {
     setCurrentPageIndex(pageIndex);
   };
 
+  const handleRoleChange = (roleId: string) => {
+    if (roleId === urlRoleId) {
+      return;
+    }
+
+    resetPermissionState();
+    navigate(`/system-admin/${roleId}`);
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setCurrentPageIndex(0);
+    setPageNumber('1');
+  };
+
   const handleNextPage = () => {
     const nextPageIndex = currentPageIndex + 1;
     if (nextPageIndex < totalPages) {
@@ -153,7 +221,7 @@ const RolePermissionPage = () => {
     setChangesList([]);
     toast({
       title: "Changes Discarded",
-      position:`top`,
+      position: `top`,
       description: "All permission changes have been reverted",
       status: "info",
       duration: 3000,
@@ -185,23 +253,15 @@ const RolePermissionPage = () => {
     }
 
     setIsSaving(true);
-
-    // Get only the action IDs that were changed from false to true (newly selected)
-    const newlySelectedActionIds = changesList
-      .filter((actionId) => {
-        const currentAction = actions.find(a => a.id === actionId);
-        const originalAction = originalActions.find(a => a.id === actionId);
-        return currentAction?.selected && !originalAction?.selected;
-      })
-      .map((actionId) => actionId);
+    const selectedActionIds = actions.filter(action => action.selected).map(action => action.id);
 
     try {
-      await modifyRoleGrantList({ roleId: urlRoleId, actionIdList: newlySelectedActionIds });
+      await modifyRoleGrantList({ roleId: urlRoleId, actionIdList: selectedActionIds });
 
       toast({
         title: "Changes Saved",
         position: `top`,
-        description: `${newlySelectedActionIds.length} new permissions have been added`,
+        description: `New permissions have been added`,
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -297,21 +357,98 @@ const RolePermissionPage = () => {
   return (
     <Flex justify="center" flexDirection="column" flex={1} p="2">
       <VStack align="flex-start" w="full" h="full" py="2" px="1" mt={9}>
-        <HStack spacing={3} align="baseline">
-          <Heading fontSize="2xl" fontWeight="bold" mb={6}>{currentRoleName}</Heading>
-          {!isActionsLoading && (
-            <Text fontSize="sm" color="gray.600">
-              {enabledCount}/{actions.length} actions
-            </Text>
-          )}
-        </HStack>
+        <Flex
+          justify="space-between"
+          align={{ base: "flex-start", md: "center" }}
+          direction={{ base: "column", md: "row" }}
+          gap={3}
+          w="full"
+          mb={5}
+        >
+          <HStack spacing={3} align="baseline">
+            <Heading fontSize="2xl" fontWeight="bold">{currentRoleName}</Heading>
+            {!isActionsLoading && !isActionsError && (
+              <Text fontSize="sm" color="gray.600">
+                {enabledCount}/{actions.length} actions
+              </Text>
+            )}
+          </HStack>
+
+          <Menu placement="bottom-end">
+            {({ onClose: closeRoleMenu }) => (
+              <>
+                <MenuButton
+                  as={Button}
+                  rightIcon={<FiChevronDown />}
+                  w={{ base: "full", md: "220px" }}
+                  h="38px"
+                  bg="white"
+                  border="1px solid"
+                  borderColor="gray.300"
+                  borderRadius="4px"
+                  color="gray.700"
+                  fontSize="14px"
+                  fontWeight="400"
+                  justifyContent="space-between"
+                  px={3}
+                  isDisabled={isRolesLoading}
+                  _hover={{ borderColor: "gray.400" }}
+                  _active={{ borderColor: "blue.500", boxShadow: "0 0 0 1px #3182ce" }}
+                >
+                  Change role
+                </MenuButton>
+
+                <MenuList w="220px" minW="220px" p={0} overflow="hidden" zIndex={20}>
+                  <Box maxH="220px" overflowY="auto" py={1}>
+                    {roles?.map((role: IParticipantUserRole) => {
+                      const isSelected = role.roleId === urlRoleId;
+
+                      return (
+                        <MenuItem
+                          key={role.roleId}
+                          onClick={() => handleRoleChange(role.roleId)}
+                          bg={isSelected ? "blue.50" : "white"}
+                          color={isSelected ? "blue.700" : "gray.700"}
+                          fontSize="14px"
+                          fontWeight={isSelected ? "600" : "400"}
+                          minH="36px"
+                          _hover={{ bg: isSelected ? "blue.50" : "gray.50" }}
+                        >
+                          {role.name}
+                        </MenuItem>
+                      );
+                    })}
+                  </Box>
+
+                  <Box borderTop="1px solid" borderColor="gray.200" bg="white" py={1}>
+                    <MenuItem
+                      icon={<FiPlus />}
+                      color="blue.600"
+                      fontSize="14px"
+                      fontWeight="600"
+                      minH="38px"
+                      onClick={() => {
+                        closeRoleMenu();
+                        window.setTimeout(onAddRoleOpen, 0);
+                      }}
+                      _hover={{ bg: "blue.50" }}
+                    >
+                      Add new role
+                    </MenuItem>
+                  </Box>
+                </MenuList>
+              </>
+            )}
+          </Menu>
+        </Flex>
 
         <Flex
           justify="space-between"
           align="center"
           wrap={{ base: "wrap", md: "nowrap" }}
-          gap={{ base: 4, md: 0 }}
+          gap={4}
           w="full"
+          mb={4}
         >
           <InputGroup maxW={{ base: "100%", md: "400px" }}>
             <InputLeftElement pointerEvents="none">
@@ -352,6 +489,36 @@ const RolePermissionPage = () => {
           </HStack>
         </Flex>
 
+        {!isActionsLoading && !isActionsError && categoryOptions.length > 1 && (
+          <Flex gap={2} mb={6} w="full" wrap="wrap">
+            {categoryOptions.map((category) => {
+              const isSelected = selectedCategory === category;
+              const label = category === 'All' ? 'All actions' : category;
+
+              return (
+                <Button
+                  key={category}
+                  size="sm"
+                  variant={isSelected ? "solid" : "outline"}
+                  bg={isSelected ? "primary" : "white"}
+                  color={isSelected ? "white" : "gray.700"}
+                  borderColor={isSelected ? "primary" : "gray.200"}
+                  fontWeight="600"
+                  h="36px"
+                  flexShrink={0}
+                  onClick={() => handleCategoryChange(category)}
+                  _hover={{
+                    bg: isSelected ? "primary" : "gray.50",
+                    borderColor: isSelected ? "primary" : "gray.300",
+                  }}
+                >
+                  {label}
+                </Button>
+              );
+            })}
+          </Flex>
+        )}
+
         {/* Actions Grid */}
         {isActionsLoading ? (
           <Flex
@@ -367,8 +534,25 @@ const RolePermissionPage = () => {
               <Text color="gray.600" fontSize="sm">Loading permissions...</Text>
             </VStack>
           </Flex>
+        ) : isActionsError ? (
+          <Center
+            minH="320px"
+            w="full"
+            bg="white"
+            borderRadius="lg"
+          >
+            <VStack spacing={3} align="center" textAlign="center" px={4}>
+              <Icon as={FiAlertCircle} boxSize={8} color="red.400" />
+              <Text color="gray.800" fontWeight="semibold">
+                Could not load role permissions
+              </Text>
+              <Text color="gray.600" fontSize="sm">
+                {actionsError ? getErrorMessage(actionsError) : 'Please try changing role again.'}
+              </Text>
+            </VStack>
+          </Center>
         ) : (
-          <SimpleGrid columns={{ base: 1, sm: 1, md: 2, lg: 4 }} spacing={3} pt={8} w="full">
+          <SimpleGrid columns={{ base: 1, sm: 1, md: 2, lg: 4 }} spacing={3} w="full">
             {currentPageData.map((action) => (
               <PermissionCard key={action.id} action={action} onToggle={toggleAction} />
             ))}
@@ -377,18 +561,20 @@ const RolePermissionPage = () => {
 
         {/* Pagination Controls */}
 
-        <PaginationControls
-          canPreviousPage={canPreviousPage}
-          canNextPage={canNextPage}
-          currentPageIndex={currentPageIndex}
-          totalPages={totalPages}
-          pageNumber={pageNumber}
-          isLoading={isActionsLoading}
-          onGotoPage={handleGotoPage}
-          onPreviousPage={handlePreviousPage}
-          onNextPage={handleNextPage}
-          onPageValidation={handlePageValidation}
-        />
+        {!isActionsError && (
+          <PaginationControls
+            canPreviousPage={canPreviousPage}
+            canNextPage={canNextPage}
+            currentPageIndex={currentPageIndex}
+            totalPages={totalPages}
+            pageNumber={pageNumber}
+            isLoading={isActionsLoading}
+            onGotoPage={handleGotoPage}
+            onPreviousPage={handlePreviousPage}
+            onNextPage={handleNextPage}
+            onPageValidation={handlePageValidation}
+          />
+        )}
 
         {/* Changes Modal */}
 
@@ -402,6 +588,11 @@ const RolePermissionPage = () => {
           isSaving={isSaving}
           closeChangesModal={closeChangesModal}
           saveChanges={saveChanges}
+        />
+
+        <AddNewModal
+          isOpen={isAddRoleOpen}
+          onClose={onAddRoleClose}
         />
       </VStack>
     </Flex>

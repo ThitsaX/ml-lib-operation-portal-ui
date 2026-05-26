@@ -4,7 +4,6 @@ import SideBarAccordion from './SideBarAccordion';
 import SideBarItem from './SideBarItem';
 import { FiHome, FiRepeat, FiBarChart2, FiHelpCircle, FiMenu, FiSettings,  FiUser, FiShield, FiPlus, FiDatabase, FiSettings as FiAdmin } from 'react-icons/fi';
 import { HiOutlineBuildingLibrary } from 'react-icons/hi2';
-import { useSystemAdminRoles } from '@hooks/useSystemAdminRoles';
 import { AiOutlineAudit } from 'react-icons/ai';
 import { MdPendingActions } from 'react-icons/md';
 import { FaHandshake } from 'react-icons/fa';
@@ -23,7 +22,6 @@ interface SideBarProps {
 
 const SideBar = ({ collapsed, toggleCollapse, width = DEFAULT_WIDTH, headerHeight }: SideBarProps) => {
   const { t } = useTranslation();
-  const { systemAdminItems } = useSystemAdminRoles();
 
   return (
     <Box
@@ -251,32 +249,13 @@ const SideBar = ({ collapsed, toggleCollapse, width = DEFAULT_WIDTH, headerHeigh
             menuId="support_center"
           />
 
-          {/* Admin Accordion */}
-          <SideBarAccordion
+          <SideBarItem
+            to="/system-admin"
+            id="8"
             icon={<FiAdmin />}
-            label="Admin"
+            label={t('ui.system_settings')}
             collapsed={collapsed}
-            menuId="admin"
-            items={[
-              {
-                id: 'onboarding-admin',
-                label: 'OnBoarding',
-                to: '/onboarding',
-                menuId: 'onboarding',
-              },
-              {
-                id: 'system-admin-sub',
-                label: 'System Settings',
-                to: '#',
-                menuId: 'system_admin',
-                isSubAccordion: true,
-                subItems: systemAdminItems.map(item => ({
-                  ...item,
-                  id: `admin-${item.id}`,
-                  menuId: item.menuId === 'system_admin' ? 'system_admin' : 'admin',
-                })),
-              },
-            ]}
+            menuId="system_admin"
           />
 
         </VStack>

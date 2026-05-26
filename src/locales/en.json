@@ -459,5 +459,6 @@
   "ui.view_list": "View List",
   "ui.yes": "Yes",
   "ui.save_all_changes": "Save All Changes",
-  "ui.discard_changes": "Discard Changes"
+  "ui.discard_changes": "Discard Changes",
+  "ui.system_settings": "System Settings"
 }

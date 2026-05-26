@@ -1,9 +1,8 @@
-import { Box } from "@chakra-ui/react";
 import {
+    Box,
     VStack,
     HStack,
     Text,
-    Badge,
     Switch
 } from "@chakra-ui/react";
 
@@ -12,6 +11,7 @@ interface PermissionCardProps {
     action: {
         id: string;
         name: string;
+        category?: string;
         selected: boolean;
         mandatory: boolean;
     };
@@ -34,11 +34,9 @@ const PermissionCard = ({
             boxShadow="sm"
             _hover={{
                 bg: "gray.50",
-                borderColor: "blue.400",
-                boxShadow: "md",
-                transform: "translateY(-2px)",
+                borderColor: "blue.300",
             }}
-            transition="all 0.25s ease-in-out"
+            transition="background-color 0.16s ease, border-color 0.16s ease"
         >
             <HStack
                 justify="space-between"
@@ -63,20 +61,6 @@ const PermissionCard = ({
                     >
                         {action.name}
                     </Text>
-
-                    <Badge
-                        colorScheme={action.selected ? "green" : "gray"}
-                        variant="subtle"
-                        size="sm"
-                        px={2}
-                        py={0.5}
-                        borderRadius="full"
-                        fontSize="xs"
-                    >
-                        {action.selected
-                            ? "SELECTED"
-                            : "NOT SELECTED"}
-                    </Badge>
                 </VStack>
 
                 <Switch

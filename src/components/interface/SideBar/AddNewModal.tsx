@@ -18,7 +18,7 @@ import {
   Flex,
   useToast,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { type FormEvent, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { createRole } from '@services/participant';
 import { IApiErrorResponse } from '@typescript/services';
@@ -38,7 +38,8 @@ const AddNewModal = ({ isOpen, onClose, onSuccess }: AddNewModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const isRoleNameEmpty = !roleName.trim();
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (event?: FormEvent) => {
+    event?.preventDefault();
     if (isLoading) return;
     setIsLoading(true);
     try {
@@ -138,6 +139,7 @@ const AddNewModal = ({ isOpen, onClose, onSuccess }: AddNewModalProps) => {
             </Button>
             <Button
               colorScheme="blue"
+              type="submit"
               isLoading={isLoading}
               isDisabled={isRoleNameEmpty}
               loadingText="Creating..."

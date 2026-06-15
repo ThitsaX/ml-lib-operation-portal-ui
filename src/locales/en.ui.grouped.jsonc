@@ -103,6 +103,8 @@
   "ui.payee_fsp_id": "Payee FSP ID",
   "ui.payee_id_value": "Payee ID Value",
   "ui.payee_receive_amount": "Payee Receive Amount",
+  "ui.payer_dfsp_fee_amount": "Payer DFSP Fee",
+  "ui.scheme_fee_amount": "Scheme Fee",
   "ui.payer_fsp_id": "Payer FSP ID",
   "ui.payer_id_value": "Payer ID Value",
   "ui.quote_amount": "Quote Amount",

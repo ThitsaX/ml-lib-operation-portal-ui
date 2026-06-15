@@ -92,6 +92,8 @@
   "ui.payee_fsp_id": "ID FSP bénéficiaire",
   "ui.payee_id_value": "Valeur ID bénéficiaire",
   "ui.payee_receive_amount": "Montant reçu par le bénéficiaire",
+  "ui.payer_dfsp_fee_amount": "Frais DFSP payeur",
+  "ui.scheme_fee_amount": "Frais du scheme",
   "ui.payer_fsp_id": "ID FSP payeur",
   "ui.payer_id_value": "Valeur ID payeur",
   "ui.quote_amount": "Montant du devis",

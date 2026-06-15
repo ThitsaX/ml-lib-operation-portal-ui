@@ -57,6 +57,8 @@ interface ITransferDetails {
   quoteAmount: number;
   transferAmount: number;
   payeeReceivedAmount: number;
+  payerDfspFeeAmount: number;
+  schemeFeeAmount: number;
   payeeDfspFeeAmount: number;
   payeeDfspCommissionAmount: number;
   submittedOnDate: string;

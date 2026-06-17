@@ -7,7 +7,7 @@ import Login from '@pages/Login';
 import ChangePassword from '@pages/ChangePassword';
 import {
   SettlementBankReport, SettlementBankReportUseCase, SettlementOverviewReport, SettlementDetailReport, SettlementSummaryReport,
-  SettlementStatementReport, SettlementAuditReport, AuditReport, TransactionDetailReport, ManagementSummaryReport, TransferSettlementReport
+  SettlementStatementReport, SettlementAuditReport, AuditReport, TransactionDetailReport, ManagementSummaryReport, TransferSettlementReport, FeeSettlementReport
 } from '@pages/Reports';
 import Transfer from '@pages/Transfer';
 import User from '@pages/UserManagement/User';
@@ -196,6 +196,14 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute allowedMenuId="transfer_settlement_report">
                 <TransferSettlementReport />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "fee-settlement-report",
+            element: (
+              <ProtectedRoute allowedMenuId="fee_settlement_report">
+                <FeeSettlementReport />
               </ProtectedRoute>
             ),
           },

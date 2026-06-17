@@ -25,5 +25,6 @@ export const menuIds : Record<string, number>= {
     'dfsp_settlement_overview_report': 25,
     'settlement_bank_report_usecase': 26,
     'transfer_settlement_report': 27,
-    'system_admin': 28
+    'system_admin': 28,
+    'fee_settlement_report': 29
 }

@@ -16,6 +16,15 @@ export interface ISettlementBankReportUseCase {
   timezoneOffset: string
 }
 
+export interface IFeeSettlementReport {
+  startDate: string
+  endDate: string
+  settlementId: string
+  currency: string
+  fileType: string
+  timezoneOffset: string
+}
+
 export interface ISettlementReport {
   startDate: string
   endDate: string

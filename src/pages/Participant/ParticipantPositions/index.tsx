@@ -83,8 +83,12 @@ const ParticipantPositions = () => {
     const { isOpen: isNdcOpen, onOpen: onNdcOpen, onClose: onNdcClose } = useDisclosure();
 
     useEffect(() => {
-        syncHubParticipantsToPortal();
-        getPositionList();
+        const loadData = async () => {
+            await syncHubParticipantsToPortal();
+            await getPositionList();
+        };
+
+        loadData();
     }, []);
 
     const getPositionList = async () => {

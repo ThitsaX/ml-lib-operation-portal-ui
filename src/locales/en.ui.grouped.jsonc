@@ -165,6 +165,7 @@
   "ui.management_summary_report": "Management Summary Report",
   "ui.transfer_settlement_report": "MT 971 Transfer Settlement Report",
   "ui.fee_settlement_report": "MT 971 Fee Settlement Report",
+  "ui.fee_settlement_summary_report": "Fee Settlement Summary Report",
   "ui.pdf": "PDF",
   "ui.transaction_detail_report": "Transaction Detail Report",
   "ui.xlsx": "XLSX",

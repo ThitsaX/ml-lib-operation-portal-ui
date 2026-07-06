@@ -150,6 +150,7 @@
   "ui.management_summary_report": "Rapport de synthèse de gestion",
   "ui.transfer_settlement_report": "Rapport de règlement de transfert MT 971",
   "ui.fee_settlement_report": "Rapport de règlement des frais MT 971",
+  "ui.fee_settlement_summary_report": "Fee Settlement Summary Report",
   "ui.pdf": "PDF",
   "ui.transaction_detail_report": "Rapport détaillé des transactions",
   "ui.xlsx": "XLSX",

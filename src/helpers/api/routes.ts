@@ -46,6 +46,7 @@ export const privateRoutes = {
   getRoleListByParticipant: '/secured/getRoleListByParticipant',
   getParticipantListByParticipant: '/secured/getParticipantListByParticipant',
   getParticipantListIncludingHub:'/secured/getParticipantListIncludingHub',
+  getParticipantListByDirectIndirect: '/secured/getParticipantListByDirectIndirect',
   updateParticipantStatus: '/secured/updateParticipantStatus',
 
   createUser: '/secured/createUser',
@@ -56,6 +57,7 @@ export const privateRoutes = {
   generateSettlementBankReportUseCase: '/secured/generateSettlementBankReportUseCase',
   generateSettlementBankOverviewReport: '/secured/generateSettlementBankOverviewReport',
   generateFeeAmountReport: '/secured/generateFeeAmountReport',
+  generateFeeSettlementSummaryReport: '/secured/generateFeeSettlementSummaryReport',
 
   resetPassword: '/secured/resetPassword',
   getAllIdType: '/secured/getAllIdType',

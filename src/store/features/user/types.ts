@@ -26,6 +26,7 @@ export interface IUserProfile {
   description: string;
   roleList: string[];
   participantId: string;
+  dfspId?: string;
   userRoleType: RoleType;
   createdDate: number;
   logoFileType: string | null;

@@ -33,11 +33,12 @@ import { ITimezoneOption } from 'react-timezone-select';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store';
 import { IGetSettlementIds } from "@typescript/services/report";
-import { useGetParticipantList } from '@hooks/services/participant';
+import { useGetParticipantList, useGetParticipantListByDirectIndirect } from '@hooks/services/participant';
 import { type IApiErrorResponse } from '@typescript/services';
 import { getErrorMessage } from '@helpers/errors';
 import { CustomSelect } from '@components/interface';
 import { OptionType } from '@components/interface/CustomSelect';
+import { Input } from '@chakra-ui/react';
 import { CustomDateTimePicker } from '@components/interface/CustomDateTimePicker';
 import { PreventableButton } from '@components/interface/PreventableButton';
 import { REPORT_NOT_FOUND_ERROR } from '@helpers';
@@ -62,6 +63,7 @@ const FeeSettlementSummaryReport = () => {
   const [settlementId, setSettlementId] = useState("");
 
   const { data: participantList } = useGetParticipantList();
+  const { data: directIndirectParticipantList } = useGetParticipantListByDirectIndirect();
   // Redux
   const user = useGetUserState();
   const toast = useToast();
@@ -78,6 +80,11 @@ const FeeSettlementSummaryReport = () => {
   const isHubUser =
     typeof user.data?.participantName === 'string' &&
     user.data.participantName.toLowerCase() === 'hub';
+
+  const isDirectUser =
+    typeof user.data?.participantName === 'string' &&
+    user.data.participantName.toLowerCase() !== 'hub' &&
+    directIndirectParticipantList && directIndirectParticipantList.length > 0;
 
   const selectedTZString = useMemo(
     () => (selectedTimezone.value),
@@ -114,9 +121,16 @@ const FeeSettlementSummaryReport = () => {
     setSettlementIdOptions([]);
     setSettlementId('');
     setValue('settlementId', '');
-    setValue('fspId', '');
 
-  }, [selectedTimezone, setValue]);
+    if (isHubUser) {
+      setValue('fspId', 'ALL');
+    } else if (isDirectUser) {
+      setValue('fspId', '');
+    } else {
+      setValue('fspId', user?.data?.participantName || '');
+    }
+
+  }, [selectedTimezone, setValue, isHubUser, isDirectUser, user]);
 
   const search = useCallback(() => {
     start();
@@ -134,7 +148,28 @@ const FeeSettlementSummaryReport = () => {
       ? '0000'
       : moment().tz(selectedTimezone?.value).format('ZZ').replace('+', '');
 
-    getSettlementIds(user, StartDate, EndDate, '', tzOffSet)
+    const selectedFspId = getValues().fspId;
+    const selectedParticipant = participantList?.find(
+      participant => participant.participantName === selectedFspId
+    );
+    const selectedHubDfspId = selectedParticipant?.dfspId ? String(selectedParticipant.dfspId) : '';
+    const currentUserHubDfspId = user?.data?.dfspId || user?.data?.participantId || '';
+    const dfspIdForApi = isHubUser ? '' : (isDirectUser ? selectedHubDfspId : currentUserHubDfspId);
+
+    if (isDirectUser && !dfspIdForApi) {
+      toast({
+        position: 'top',
+        title: 'Unable to resolve selected DFSP',
+        status: 'error',
+        isClosable: true,
+        duration: 3000
+      });
+      setRunButtonState(true);
+      complete();
+      return;
+    }
+    
+    getSettlementIds(user, StartDate, EndDate, dfspIdForApi, tzOffSet)
       .then((data: IGetSettlementIds) => {
         if (data.settlementIdDataList?.length === 0) {
           showDataNotFound(toast);
@@ -169,7 +204,7 @@ const FeeSettlementSummaryReport = () => {
         setRunButtonState(true);
         complete();
       });
-  }, [complete, getValues, start, toast, user, selectedTimezone]);
+  }, [complete, getValues, isDirectUser, isHubUser, participantList, selectedTimezone, start, toast, user]);
 
   const onSearchClick = useCallback(async () => {
     search();
@@ -201,7 +236,7 @@ const FeeSettlementSummaryReport = () => {
     try {
       const res = await generateFeeSettlementSummaryReport(user, {
         settlementId: formData.settlementId,
-        fspId: isHubUser ? formData.fspId : user?.data?.participantName,
+        fspId: isHubUser ? 'ALL' : (isDirectUser ? formData.fspId : user?.data?.participantName || ''),
         timezone: timezoneOffset,
       });
 
@@ -249,6 +284,76 @@ const FeeSettlementSummaryReport = () => {
           w="full"
           pb={2}
         >
+          <FormControl isInvalid={!isEmpty(errors.fspId)}>
+            <FormLabel>{t('ui.dfsp_name')}</FormLabel>
+
+            {isHubUser ? (
+              <Controller
+                name="fspId"
+                control={control}
+                render={({ field }) => (
+                  <CustomSelect
+                    isClearable={false}
+                    options={[{ value: 'ALL', label: 'ALL' }]}
+                    value={{ value: 'ALL', label: 'ALL' }}
+                    onChange={(selected: OptionType | null) => field.onChange(selected?.value || 'ALL')}
+                  />
+                )}
+              />
+            ) : isDirectUser ? (
+              <Controller
+                name="fspId"
+                control={control}
+                render={({ field }) => (
+                  <CustomSelect
+                    isClearable
+                    placeholder={t('ui.select_dfsp')}
+                    options={
+                      (directIndirectParticipantList ?? []).map(
+                        (item): OptionType => ({
+                          value: item.participantName,
+                          label: item.participantDescription ? `${item.participantName} (${item.participantDescription})` : item.participantName,
+                        })
+                      )
+                    }
+                    value={
+                      field.value
+                        ? {
+                          value: field.value,
+                          label: (() => {
+                            const p = directIndirectParticipantList?.find(
+                              (p) => p.participantName === field.value
+                            );
+                            return p
+                              ? p.participantDescription
+                                ? `${p.participantName} (${p.participantDescription})`
+                                : p.participantName
+                              : '';
+                          })(),
+                        }
+                        : null
+                    }
+                    onChange={(selected: OptionType | null) => {
+                      const value = selected?.value || '';
+                      field.onChange(value);
+                      setSettlementIdOptions([]);
+                      setSettlementId('');
+                    }}
+                  />
+                )}
+              />
+            ) : (
+              <Input
+                value={user.data?.participantName || ""}
+                readOnly
+                bg="gray.100"
+                _readOnly={{ opacity: 1, cursor: "not-allowed" }}
+              />
+            )}
+
+            <FormErrorMessage>{errors.fspId?.message}</FormErrorMessage>
+          </FormControl>
+
           <FormControl
             isInvalid={!isEmpty(errors.startDate)} position="relative" pb={3}
           >
@@ -292,7 +397,6 @@ const FeeSettlementSummaryReport = () => {
             />
             <FormErrorMessage pb={1} position="absolute" bottom="-22px">{errors.endDate?.message}</FormErrorMessage>
           </FormControl>
-          <Box />
           <FormControl
             display="flex"
             justifyContent={{ base: "stretch", md: "flex-end" }}
@@ -301,7 +405,7 @@ const FeeSettlementSummaryReport = () => {
           >
             <Button
               onClick={handleSubmit(onSearchClick)}
-              isDisabled={!isValid}
+              isDisabled={!isValid || (isDirectUser && !getValues().fspId)}
               colorScheme="blue"
               gap="2"
               size="md"
@@ -352,39 +456,7 @@ const FeeSettlementSummaryReport = () => {
             />
           </FormControl>
 
-          {isHubUser && (
-            <FormControl
-              w="100%"
-              isInvalid={!isEmpty(errors.fspId)}
-            >
-              <FormLabel>{t('ui.select_dfsp')}</FormLabel>
-              <Controller
-                name="fspId"
-                control={control}
-                render={({ field }) => (
-                  <CustomSelect
-                    maxMenuHeight={300}
-                    isClearable={true}
-                    options={participantList?.map((item) => ({
-                      value: item.participantName,
-                      label: item.participantName,
-                    })) || []}
-                    value={
-                      field.value
-                        ? {
-                          value: field.value,
-                          label: participantList?.find((p) => p.participantName === field.value)?.participantName || '',
-                        }
-                        : null
-                    }
-                    onChange={(selected: OptionType | null) => field.onChange(selected?.value || '')}
-                    placeholder={t('ui.select_dfsp')}
-                  />
-                )}
-              />
-              <FormErrorMessage>{errors.fspId?.message}</FormErrorMessage>
-            </FormControl>
-          )}
+          <Box />
           <FormControl w="100%" mt={8}>
 
             <Controller

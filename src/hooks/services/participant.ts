@@ -5,6 +5,7 @@ import {
   getParticipantCurrencyList, getHubCurrency, getLiquidityProfileList, getParticipantList,
   getParticipantPositionList,
   getRoleList,
+  getParticipantListByDirectIndirect,
 } from '@services/participant'
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
 import {
@@ -60,6 +61,17 @@ export const useGetParticipantListIncludingHub = (
   useQuery<IParticipantOrganization[], IApiErrorResponse>({
     queryKey: ['getParticipantListIncludingHub'],
     queryFn: getParticipantListIncludingHub,
+    ...options
+  })
+
+export const useGetParticipantListByDirectIndirect = (
+  options?: UseQueryOptions<IParticipantOrganization[],
+    IApiErrorResponse
+  >
+) =>
+  useQuery<IParticipantOrganization[], IApiErrorResponse>({
+    queryKey: ['getParticipantListByDirectIndirect'],
+    queryFn: getParticipantListByDirectIndirect,
     ...options
   })
 

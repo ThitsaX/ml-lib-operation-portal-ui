@@ -33,7 +33,7 @@ import { ITimezoneOption } from 'react-timezone-select';
 import { useSelector } from 'react-redux';
 import { RootState } from '@store';
 import { IGetSettlementIds } from "@typescript/services/report";
-import { useGetParticipantList, useGetParticipantListByDirectIndirect } from '@hooks/services/participant';
+import { useGetParticipantListByDirectIndirect } from '@hooks/services/participant';
 import { type IApiErrorResponse } from '@typescript/services';
 import { getErrorMessage } from '@helpers/errors';
 import { CustomSelect } from '@components/interface';
@@ -62,7 +62,6 @@ const FeeSettlementSummaryReport = () => {
   const [settlementIdOptions, setSettlementIdOptions] = useState<any[]>([]);
   const [settlementId, setSettlementId] = useState("");
 
-  const { data: participantList } = useGetParticipantList();
   const { data: directIndirectParticipantList } = useGetParticipantListByDirectIndirect();
   // Redux
   const user = useGetUserState();
@@ -149,12 +148,12 @@ const FeeSettlementSummaryReport = () => {
       : moment().tz(selectedTimezone?.value).format('ZZ').replace('+', '');
 
     const selectedFspId = getValues().fspId;
-    const selectedParticipant = participantList?.find(
+    const selectedParticipant = directIndirectParticipantList?.find(
       participant => participant.participantName === selectedFspId
     );
-    const selectedHubDfspId = selectedParticipant?.dfspId ? String(selectedParticipant.dfspId) : '';
+    const selectedDfspId = selectedParticipant?.dfspId ? String(selectedParticipant.dfspId) : '';
     const currentUserHubDfspId = user?.data?.dfspId || user?.data?.participantId || '';
-    const dfspIdForApi = isHubUser ? '' : (isDirectUser ? selectedHubDfspId : currentUserHubDfspId);
+    const dfspIdForApi = isHubUser ? '' : (isDirectUser ? selectedDfspId : currentUserHubDfspId);
 
     if (isDirectUser && !dfspIdForApi) {
       toast({
@@ -204,7 +203,7 @@ const FeeSettlementSummaryReport = () => {
         setRunButtonState(true);
         complete();
       });
-  }, [complete, getValues, isDirectUser, isHubUser, participantList, selectedTimezone, start, toast, user]);
+  }, [complete, directIndirectParticipantList, getValues, isDirectUser, isHubUser, selectedTimezone, start, toast, user]);
 
   const onSearchClick = useCallback(async () => {
     search();

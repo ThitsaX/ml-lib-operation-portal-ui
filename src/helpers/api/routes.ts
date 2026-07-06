@@ -46,6 +46,7 @@ export const privateRoutes = {
   getRoleListByParticipant: '/secured/getRoleListByParticipant',
   getParticipantListByParticipant: '/secured/getParticipantListByParticipant',
   getParticipantListIncludingHub:'/secured/getParticipantListIncludingHub',
+  getParticipantListByDirectIndirect: '/secured/getParticipantListByDirectIndirect',
   updateParticipantStatus: '/secured/updateParticipantStatus',
 
   createUser: '/secured/createUser',

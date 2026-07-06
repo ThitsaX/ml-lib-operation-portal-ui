@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import React, { useRef, useState, useEffect, useMemo, useCallback } from 'react';
 import { FiSave, FiTrash2 } from 'react-icons/fi';
 import {

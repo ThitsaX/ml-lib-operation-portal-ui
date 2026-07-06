@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import { Text, Heading, VStack, Button } from '@chakra-ui/react'
 import { Link } from 'react-router-dom'
 import { memo } from 'react'

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import React from 'react';
 import { describe, expect, it, jest } from '@jest/globals';
 import { renderHook, waitFor } from '@testing-library/react';

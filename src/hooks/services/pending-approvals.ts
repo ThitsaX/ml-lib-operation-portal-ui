@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import { getAllPendingApprovals } from '@services/pending-approvals'
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
 import { type IApiErrorResponse } from '@typescript/services'

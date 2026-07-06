@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useReportDownloadContext } from '@contexts/ReportDownloadContext';
 import { IApiErrorResponse } from '@typescript/services';

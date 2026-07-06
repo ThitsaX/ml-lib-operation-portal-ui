@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import { memo } from 'react';
 import { Box, IconButton, Link, VStack, Button, Divider, Text, HStack, Icon } from '@chakra-ui/react';
 import SideBarAccordion from './SideBarAccordion';

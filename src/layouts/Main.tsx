@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import { Box } from '@chakra-ui/react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { Header, SideBar } from '@components/interface';

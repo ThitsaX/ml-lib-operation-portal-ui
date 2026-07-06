@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import { type RoleType } from '@typescript/form';
 import { type IApiErrorResponse } from '@typescript/services';
 

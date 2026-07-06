@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import React, { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import {
   Popover,

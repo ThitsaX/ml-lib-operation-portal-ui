@@ -158,6 +158,7 @@
   "ui.management_summary_report": "Relatório de Resumo Gerencial",
   "ui.transfer_settlement_report": "Relatório de Liquidação de Transferência MT 971",
   "ui.fee_settlement_report": "Relatório de Liquidação de Taxas MT 971",
+  "ui.fee_settlement_summary_report": "Fee Settlement Summary Report",
   "ui.pdf": "PDF",
   "ui.transaction_detail_report": "Relatório de Detalhes da Transação",
   "ui.xlsx": "XLSX",

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 // utils/dateHelpers.ts
 import moment from "moment-timezone";
 

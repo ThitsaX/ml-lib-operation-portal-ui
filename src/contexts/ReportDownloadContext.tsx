@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import { createContext, useContext, useEffect, useCallback, useMemo, useRef, useState, ReactNode } from 'react';
 import { getReportDownloadStatus, getReportDownloadUrlCloud } from '@services/report';
 import { useGetUserState } from '@store/hooks';

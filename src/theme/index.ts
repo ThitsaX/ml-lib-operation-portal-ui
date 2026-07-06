@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import { extendTheme } from '@chakra-ui/react'
 
 const theme = extendTheme({

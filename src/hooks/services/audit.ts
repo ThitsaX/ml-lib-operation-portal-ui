@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import { getMadeByList, getActionList, getAllAuditList } from '@services/audit';
 import { UseMutationOptions, useMutation } from '@tanstack/react-query';
 import { IGetAuditByParticipantValues } from '@typescript/form';

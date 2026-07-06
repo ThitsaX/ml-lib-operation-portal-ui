@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { Auth, Main } from '@layouts';
 

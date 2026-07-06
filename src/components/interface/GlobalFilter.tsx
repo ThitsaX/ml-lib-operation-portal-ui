@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import React from 'react';
 import { InputGroup, InputLeftElement, Input, Box } from '@chakra-ui/react';
 import { TbSearch } from 'react-icons/tb';

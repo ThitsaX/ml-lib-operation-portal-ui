@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import i18n, { type supportedLngs } from '@locales'
 import { type IApiErrorResponse } from '@typescript/services'
 import { humanize } from '@utils'

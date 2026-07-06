@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import React from "react";
 import ReactJson from "react-json-view";
 import { Box, Button, useClipboard } from "@chakra-ui/react";

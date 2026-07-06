@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import { RootState, useAppDispatch } from '@store';
 import { UserActions } from '@store/features/user';
 import { IAuthResponse } from '@typescript/services';

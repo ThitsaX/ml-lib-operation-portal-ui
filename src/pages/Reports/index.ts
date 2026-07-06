@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import SettlementDetailReport from './SettlementDetailReport'
 import SettlementSummaryReport from './SettlementSummaryReport'
 import SettlementStatementReport from './SettlementStatementReport'

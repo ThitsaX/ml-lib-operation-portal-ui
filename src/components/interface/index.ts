@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import Header from './Header';
 import SideBar from './SideBar';
 import AnnouncementCard from './AnnouncementCard';

@@ -2,6 +2,7 @@
   "name": "operation-portal-frontend",
   "version": "0.1.0",
   "private": true,
+  "license": "Apache-2.0",
   "scripts": {
     "i18n:validate": "node scripts/validate-locales-jsonc.mjs",
     "i18n:sync": "node scripts/sync-locales-jsonc.mjs && npm run i18n:validate",

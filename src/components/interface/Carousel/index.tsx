@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import { Splide, type SplideProps, SplideSlide } from '@splidejs/react-splide'
 import '@splidejs/react-splide/css'
 import { memo, type ReactElement } from 'react'

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import AxiosRequest, { routes } from '@helpers/api'
 import { axiosErrorHandler, getErrorMessageByCode } from '@helpers/errors'
 import { createAsyncThunk } from '@reduxjs/toolkit'

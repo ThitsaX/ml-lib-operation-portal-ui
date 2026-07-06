@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 import AxiosRequest, { generateAccessToken, routes } from '@helpers/api'
 import { axiosErrorHandler, getErrorMessageByCode } from '@helpers/errors'
 import { store } from '@store'

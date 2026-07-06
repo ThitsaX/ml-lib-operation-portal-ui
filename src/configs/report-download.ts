@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 const toNumber = (value: unknown, fallback: number) => {
   const num = Number(value);
   return Number.isNaN(num) ? fallback : num;

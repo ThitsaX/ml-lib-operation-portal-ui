@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 ThitsaWorks
 export type TransferType = 'inbound' | 'outbound' | string;
 
 export type Ranges =

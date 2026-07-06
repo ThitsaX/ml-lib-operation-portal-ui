@@ -29,5 +29,6 @@ export const menuIds : Record<string, number>= {
     'transfer_settlement_report': 27,
     'system_admin': 28,
     'fee_settlement_report': 29,
-    'fee_settlement_summary_report': 30
+    'fee_settlement_summary_report': 30,
+    'fee_summary_report': 31
 }

@@ -94,6 +94,14 @@ export interface IFeeSettlementSummaryReport {
   fileType: string
 }
 
+export interface IFeeSummaryReport {
+  startDate: string
+  endDate: string
+  fspId: string
+  timezoneOffset: string
+  fileType: string
+}
+
 export interface IFeeSettlementSummaryReportResponse {
   requestId: string
   status: string

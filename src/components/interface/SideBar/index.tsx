@@ -227,6 +227,12 @@ const SideBar = ({ collapsed, toggleCollapse, width = DEFAULT_WIDTH, headerHeigh
                 to: 'reports/fee-settlement-report',
                 menuId: 'fee_settlement_report',
               },
+              {
+                id: 'FeeSettlementSummaryReport',
+                label: t('ui.fee_settlement_summary_report'),
+                to: 'reports/fee-settlement-summary-report',
+                menuId: 'fee_settlement_summary_report',
+              },
             ]}
           />
 

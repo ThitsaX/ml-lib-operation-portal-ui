@@ -28,5 +28,6 @@ export const menuIds : Record<string, number>= {
     'settlement_bank_report_usecase': 26,
     'transfer_settlement_report': 27,
     'system_admin': 28,
-    'fee_settlement_report': 29
+    'fee_settlement_report': 29,
+    'fee_settlement_summary_report': 30
 }

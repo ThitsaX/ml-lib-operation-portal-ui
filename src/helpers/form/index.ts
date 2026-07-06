@@ -554,6 +554,31 @@ export class FeeSettlementSummaryReportHelper extends FormHelper {
   }
 }
 
+export class FeeSummaryReportHelper extends FormHelper {
+  get schema() {
+    return z
+      .object({
+        startDate: z.coerce.date({
+          required_error: 'Required'
+        }),
+        endDate: z.coerce.date({
+          required_error: 'Required'
+        }),
+        fspId: z.string().min(1, 'Required'),
+        timezoneOffset: z.string().optional(),
+        fileType: z.string().min(1, 'Required'),
+      })
+      .refine((value) => value.startDate < value.endDate, {
+        message: 'Should be less than end date',
+        path: ['startDate']
+      })
+      .refine((value) => value.startDate < value.endDate, {
+        message: 'Should be greater than start date',
+        path: ['endDate']
+      });
+  }
+}
+
 export class OrganizationHelper extends FormHelper {
   get schema() {
     return z.object({

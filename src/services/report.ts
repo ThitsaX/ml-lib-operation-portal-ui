@@ -287,6 +287,45 @@ export const generateFeeAmountReport = async (
     });
 };
 
+export const generateFeeSummaryReport = async (
+  user: IUserState,
+  paramsValues: any
+) => {
+  const params = {
+    startDate: paramsValues.startDate,
+    endDate: paramsValues.endDate,
+    dfspId: paramsValues.fspId,
+    fileType: paramsValues.fileType,
+    timezoneOffset: paramsValues.timezoneOffset,
+  };
+
+  const accessToken = await generateAccessToken({
+    method: 'POST',
+    uri: routes.generateFeeSummaryReport,
+    secret: user.auth?.secretKey as string
+  });
+
+  const { axios } = AxiosRequest(accessToken, user.auth?.accessKey);
+  return axios
+    .post<any>(routes.generateFeeSummaryReport, null, {
+      params
+    })
+    .then((d) => {
+      return d.data;
+    })
+    .catch((error: AxiosError<IApiErrorResponse>) => {
+      const { code, message, ...rest } = axiosErrorHandler(error);
+      if (code && message) {
+        throw {
+          error_code: code,
+          default_error_message: getErrorMessageByCode(code),
+          i18n_error_messages: null
+        };
+      }
+      throw rest;
+    });
+};
+
 export const generateFeeSettlementSummaryReport = async (
   user: IUserState,
   paramsValues: any

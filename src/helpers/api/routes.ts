@@ -57,6 +57,7 @@ export const privateRoutes = {
   generateSettlementBankReportUseCase: '/secured/generateSettlementBankReportUseCase',
   generateSettlementBankOverviewReport: '/secured/generateSettlementBankOverviewReport',
   generateFeeAmountReport: '/secured/generateFeeAmountReport',
+  generateFeeSummaryReport: '/secured/generateFeeSummaryReport',
   generateFeeSettlementSummaryReport: '/secured/generateFeeSettlementSummaryReport',
 
   resetPassword: '/secured/resetPassword',

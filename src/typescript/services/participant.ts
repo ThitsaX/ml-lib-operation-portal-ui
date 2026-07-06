@@ -47,6 +47,7 @@ export interface IParticipantOrganizationList {
 
 export interface IParticipantOrganization {
   participantId: string,
+  dfspId?: string | number,
   participantName: string,
   participantDescription: string
   logoFileType: string | null;

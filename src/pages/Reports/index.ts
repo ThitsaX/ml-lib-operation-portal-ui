@@ -12,6 +12,7 @@ import TransactionDetailReport from './TransactionDetailReport'
 import ManagementSummaryReport from './ManagementSummaryReport'
 import TransferSettlementReport from './TransferSettlementReport'
 import FeeSettlementReport from './FeeSettlementReport'
+import FeeSettlementSummaryReport from './FeeSettlementSummaryReport'
 
 export {
   SettlementBankReport,
@@ -25,5 +26,6 @@ export {
   TransactionDetailReport,
   ManagementSummaryReport,
   TransferSettlementReport,
-  FeeSettlementReport
+  FeeSettlementReport,
+  FeeSettlementSummaryReport
 }

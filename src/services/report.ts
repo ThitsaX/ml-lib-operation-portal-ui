@@ -287,6 +287,44 @@ export const generateFeeAmountReport = async (
     });
 };
 
+export const generateFeeSettlementSummaryReport = async (
+  user: IUserState,
+  paramsValues: any
+) => {
+  const params = {
+    settlementId: paramsValues.settlementId,
+    dfspId: paramsValues.fspId,
+    timezoneOffset: paramsValues.timezone,
+    userId: user.data?.userId,
+  };
+
+  const accessToken = await generateAccessToken({
+    method: 'POST',
+    uri: routes.generateFeeSettlementSummaryReport,
+    secret: user.auth?.secretKey as string
+  });
+
+  const { axios } = AxiosRequest(accessToken, user.auth?.accessKey);
+  return axios
+    .post<any>(routes.generateFeeSettlementSummaryReport, null, {
+      params
+    })
+    .then((d) => {
+      return d.data;
+    })
+    .catch((error: AxiosError<IApiErrorResponse>) => {
+      const { code, message, ...rest } = axiosErrorHandler(error);
+      if (code && message) {
+        throw {
+          error_code: code,
+          default_error_message: getErrorMessageByCode(code),
+          i18n_error_messages: null
+        };
+      }
+      throw rest;
+    });
+};
+
 export const generateSettlementBankReportUseCase = async (
   user: IUserState,
   paramsValues: any

@@ -84,3 +84,20 @@ export interface ISettlementStatementReport {
   timezoneOffset: string
   fileType: string
 }
+
+export interface IFeeSettlementSummaryReport {
+  startDate: string
+  endDate: string
+  settlementId: string
+  fspId: string
+  timezone: string
+  fileType: string
+}
+
+export interface IFeeSettlementSummaryReportResponse {
+  requestId: string
+  status: string
+  fileUrl: string
+  fileKey: string
+  paramsSignature: string
+}

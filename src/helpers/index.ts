@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 ThitsaWorks
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 export const thousandSeparatorRegex = /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g // thousand separators regex to replace comma
 
 export const passwordRegex =/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_\-+={}|:;<>,.?/\[\]]).{6,}$/;

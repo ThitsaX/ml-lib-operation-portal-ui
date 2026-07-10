@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 ThitsaWorks
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import { thousandSeparatorRegex } from '@helpers'
 import { capitalize, snakeCase, trim } from 'lodash-es'
 import { useToast } from '@chakra-ui/react'

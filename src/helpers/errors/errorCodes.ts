@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 ThitsaWorks
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 const defaultErrorCodes = {
   INVALID_ACCESS_KEY: {
     key: 'INVALID_ACCESS_KEY'

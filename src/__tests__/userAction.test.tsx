@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 ThitsaWorks
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import { UserActions } from '@store/features/user';
 import AxiosRequest, { routes } from '@helpers/api';
 import { describe, expect, it, jest } from '@jest/globals';

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 ThitsaWorks
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import { memo, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ChevronDownIcon } from '@chakra-ui/icons';

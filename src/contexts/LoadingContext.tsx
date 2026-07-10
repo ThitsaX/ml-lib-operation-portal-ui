@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 ThitsaWorks
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import { useToken } from '@chakra-ui/react'
 import { createContext, memo, useCallback, useRef } from 'react'
 import LoadingBar, { type LoadingBarRef } from 'react-top-loading-bar'

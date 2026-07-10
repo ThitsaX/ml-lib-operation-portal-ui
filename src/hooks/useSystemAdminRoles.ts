@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: Apache-2.0
-// Copyright 2026 ThitsaWorks
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import { useQuery } from '@tanstack/react-query';
 import { useGetRoleList } from './services';
 import { UseQueryOptions } from '@tanstack/react-query';

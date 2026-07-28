@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';

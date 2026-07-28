@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import { type UserStatus, type RoleType } from '@typescript/form';
 
 export interface IParticipantUser {
@@ -45,6 +47,7 @@ export interface IParticipantOrganizationList {
 
 export interface IParticipantOrganization {
   participantId: string,
+  dfspId?: string | number,
   participantName: string,
   participantDescription: string
   logoFileType: string | null;

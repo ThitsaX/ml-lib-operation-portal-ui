@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import en from './en.json'

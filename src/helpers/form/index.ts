@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import { z } from 'zod';
 import { passwordRegex } from '@helpers';
 
@@ -491,6 +493,80 @@ export class TransferSettlementReportHelper extends FormHelper {
         }),
         currency: z.string().optional(),
         settlementId: z.string().optional(),
+      })
+      .refine((value) => value.startDate < value.endDate, {
+        message: 'Should be less than end date',
+        path: ['startDate']
+      })
+      .refine((value) => value.startDate < value.endDate, {
+        message: 'Should be greater than start date',
+        path: ['endDate']
+      });
+  }
+}
+
+export class FeeSettlementReportHelper extends FormHelper {
+  get schema() {
+    return z
+      .object({
+        startDate: z.coerce.date({
+          required_error: 'Required'
+        }),
+        endDate: z.coerce.date({
+          required_error: 'Required'
+        }),
+        currency: z.string().optional(),
+        settlementId: z.string().optional(),
+      })
+      .refine((value) => value.startDate < value.endDate, {
+        message: 'Should be less than end date',
+        path: ['startDate']
+      })
+      .refine((value) => value.startDate < value.endDate, {
+        message: 'Should be greater than start date',
+        path: ['endDate']
+      });
+  }
+}
+
+export class FeeSettlementSummaryReportHelper extends FormHelper {
+  get schema() {
+    return z
+      .object({
+        startDate: z.coerce.date({
+          required_error: 'Required'
+        }),
+        endDate: z.coerce.date({
+          required_error: 'Required'
+        }),
+        fspId: z.string().optional(),
+        settlementId: z.string().optional(),
+        timezone: z.string().optional(),
+      })
+      .refine((value) => value.startDate < value.endDate, {
+        message: 'Should be less than end date',
+        path: ['startDate']
+      })
+      .refine((value) => value.startDate < value.endDate, {
+        message: 'Should be greater than start date',
+        path: ['endDate']
+      });
+  }
+}
+
+export class FeeSummaryReportHelper extends FormHelper {
+  get schema() {
+    return z
+      .object({
+        startDate: z.coerce.date({
+          required_error: 'Required'
+        }),
+        endDate: z.coerce.date({
+          required_error: 'Required'
+        }),
+        fspId: z.string().min(1, 'Required'),
+        timezoneOffset: z.string().optional(),
+        fileType: z.string().min(1, 'Required'),
       })
       .refine((value) => value.startDate < value.endDate, {
         message: 'Should be less than end date',

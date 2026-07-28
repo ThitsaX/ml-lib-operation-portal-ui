@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import AxiosRequest, { generateAccessToken, routes } from '@helpers/api'
 import { axiosErrorHandler, getErrorMessageByCode } from '@helpers/errors'
 import { type RootState, store } from '@store'
@@ -413,6 +415,36 @@ export const getParticipantListIncludingHub = async () => {
     user: { auth, data }
   } = store.getState()
   const uri = routes.getParticipantListIncludingHub
+  const accessKey = auth?.accessKey as string
+  const secretKey = auth?.secretKey as string
+  const accessToken = await generateAccessToken({
+    method: 'GET',
+    uri,
+    secret: secretKey
+  })
+  const { axios } = AxiosRequest(accessToken, accessKey)
+  return axios
+    .get<{ participantInfoList: IParticipantOrganization[] }>(uri, {
+    })
+    .then((d) => d.data.participantInfoList)
+    .catch((error: AxiosError<IApiErrorResponse>) => {
+      const { code, message, ...rest } = axiosErrorHandler(error)
+      if (code && message) {
+        throw {
+          error_code: code,
+          default_error_message: getErrorMessageByCode(code),
+          i18n_error_messages: null
+        }
+      }
+      throw rest
+    })
+}
+
+export const getParticipantListByDirectIndirect = async () => {
+  const {
+    user: { auth, data }
+  } = store.getState()
+  const uri = routes.getParticipantListByDirectIndirect
   const accessKey = auth?.accessKey as string
   const secretKey = auth?.secretKey as string
   const accessToken = await generateAccessToken({

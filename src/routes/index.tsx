@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { Auth, Main } from '@layouts';
 
@@ -7,7 +9,7 @@ import Login from '@pages/Login';
 import ChangePassword from '@pages/ChangePassword';
 import {
   SettlementBankReport, SettlementBankReportUseCase, SettlementOverviewReport, SettlementDetailReport, SettlementSummaryReport,
-  SettlementStatementReport, SettlementAuditReport, AuditReport, TransactionDetailReport, ManagementSummaryReport, TransferSettlementReport
+  SettlementStatementReport, SettlementAuditReport, AuditReport, TransactionDetailReport, ManagementSummaryReport, TransferSettlementReport, FeeSettlementReport, FeeSettlementSummaryReport, FeeSummaryReport
 } from '@pages/Reports';
 import Transfer from '@pages/Transfer';
 import User from '@pages/UserManagement/User';
@@ -197,6 +199,30 @@ export const router = createBrowserRouter([
             element: (
               <ProtectedRoute allowedMenuId="transfer_settlement_report">
                 <TransferSettlementReport />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "fee-summary-report",
+            element: (
+              <ProtectedRoute allowedMenuId="fee_summary_report">
+                <FeeSummaryReport />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "fee-settlement-report",
+            element: (
+              <ProtectedRoute allowedMenuId="fee_settlement_report">
+                <FeeSettlementReport />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "fee-settlement-summary-report",
+            element: (
+              <ProtectedRoute allowedMenuId="fee_settlement_summary_report">
+                <FeeSettlementSummaryReport />
               </ProtectedRoute>
             ),
           },

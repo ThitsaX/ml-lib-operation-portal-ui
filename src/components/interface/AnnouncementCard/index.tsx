@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import { Box, Heading, Text, VStack } from '@chakra-ui/react'
 import { type AnnouncementInfo } from '@typescript/services'
 import { memo } from 'react'

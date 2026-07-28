@@ -506,4 +506,7 @@
   "ui.save_all_changes": "Enregistrer toutes les modifications",
   "ui.discard_changes": "Annuler les modifications",
   "ui.system_settings": "Paramètres système"
+,
+  "ui.role_permissions": "Role Permissions",
+  "ui.ndc_alert_settings": "NDC Alert Settings"
 }

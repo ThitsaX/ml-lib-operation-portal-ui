@@ -96,6 +96,15 @@ export const privateRoutes = {
   getActionListByRole: '/secured/getActionListByRole',
   createRole: '/secured/createRole',
   modifyRoleGrantList: '/secured/modifyRoleGrantList',
+
+  getNdcSchemeConfiguration: '/secured/ndc/configurations/scheme',
+  getNdcDfspConfiguration: '/secured/ndc/configurations/dfsp',
+  modifyNdcConfiguration: '/secured/ndc/configurations',
+  modifyNdcWorkerConfiguration: '/secured/ndc/worker-config',
+  getNdcThresholdDetails: '/secured/ndc/thresholdDetails',
+  modifyNdcThresholdDetails: '/secured/ndc/thresholdDetails',
+  getSchedulerConfigById: '/secured/getSchedulerConfigById',
+  getSchedulerConfigByJobName: '/secured/getSchedulerConfigByJobName'
 };
 
 const routes = {

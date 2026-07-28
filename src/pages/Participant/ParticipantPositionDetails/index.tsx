@@ -1,5 +1,6 @@
 import { VStack, Heading} from '@chakra-ui/react';
 import LiquidityProfile from '@components/interface/LiquidityProfile';
+import NdcThresholdSettings from '@components/interface/LiquidityProfile/NdcThresholdSettings';
 import OrganizationProfile from '@components/interface/OrganizationProfile';
 import BusinessContact from '@components/interface/BusinessContact';
 import { useLocation, useParams } from 'react-router-dom';
@@ -17,6 +18,7 @@ const ParticipantPositionDetails = () => {
             <OrganizationProfile participantId={participantId} />
             <BusinessContact participantId={participantId} />
             <LiquidityProfile participantId={participantId} />
+            <NdcThresholdSettings dfspId={dfspId} />
 
         </VStack>
     );

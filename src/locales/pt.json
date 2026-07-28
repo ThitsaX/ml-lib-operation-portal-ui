@@ -465,5 +465,7 @@
   "ui.yes": "Sim",
   "ui.save_all_changes": "Salvar Todas as Alterações",
   "ui.discard_changes": "Descartar Alterações",
-  "ui.system_settings": "Configurações do sistema"
+  "ui.system_settings": "Configurações do sistema",
+  "ui.role_permissions": "Role Permissions",
+  "ui.ndc_alert_settings": "NDC Alert Settings"
 }

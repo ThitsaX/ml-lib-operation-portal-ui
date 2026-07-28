@@ -22,6 +22,7 @@ import ParticipantPositionDetails from '@pages/Participant/ParticipantPositionDe
 import { FinalizeSettlement, SettlementModels, SettlementWindows } from '@pages/Settlement';
 import ProtectedRoute from "./ProtectedRoute";
 import SystemAdmin from '@pages/SystemAdmin';
+import NdcAlertSettings from '@pages/SystemAdmin/NdcAlertSettings';
 
 export const router = createBrowserRouter([
   {
@@ -282,17 +283,29 @@ export const router = createBrowserRouter([
       // System Admin Routes
       {
         path: "system-admin",
+        element: <Navigate to="/system-admin/role-permissions" replace />
+      },
+      {
+        path: "system-admin/role-permissions",
         element: (
-          <ProtectedRoute allowedMenuId="system_admin">
+          <ProtectedRoute allowedMenuId="role_permissions">
             <SystemAdmin />
           </ProtectedRoute>
         ),
       },
       {
-        path: "system-admin/:roleId",
+        path: "system-admin/role-permissions/:roleId",
         element: (
-          <ProtectedRoute allowedMenuId="system_admin">
+          <ProtectedRoute allowedMenuId="role_permissions">
             <SystemAdmin />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "system-admin/ndc-alert-settings",
+        element: (
+          <ProtectedRoute allowedMenuId="ndc_alert_settings">
+            <NdcAlertSettings />
           </ProtectedRoute>
         ),
       }

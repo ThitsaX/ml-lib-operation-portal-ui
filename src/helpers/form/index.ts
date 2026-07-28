@@ -648,7 +648,52 @@ export class LiquidityHelper extends FormHelper {
       currency: z
         .string({ required_error: 'Required' })
         .trim()
+        .min(1, 'Currency is required')
+    });
+  }
+}
+
+export class NdcThresholdHelper extends FormHelper {
+  get schema() {
+    return z.object({
+      id: z.string().optional(),
+      currency: z
+        .string({ required_error: 'Required' })
+        .trim()
         .min(1, 'Currency is required'),
+      visualConfig: z
+        .string({ required_error: 'Required' })
+        .trim()
+        .min(1, 'Visual alert is required')
+        .refine(
+          (value) => !Number.isNaN(Number(value)),
+          'Visual alert must be a number'
+        )
+        .refine(
+          (value) => Number(value) >= 0,
+          'Visual alert must be at least 0'
+        )
+        .refine(
+          (value) => Number(value) <= 100,
+          'Visual alert must be at most 100'
+        ),
+      ndcConfig: z
+        .string({ required_error: 'Required' })
+        .trim()
+        .min(1, 'Notification alert is required')
+        .refine(
+          (value) => !Number.isNaN(Number(value)),
+          'Notification alert must be a number'
+        )
+        .refine(
+          (value) => Number(value) >= 0,
+          'Notification alert must be at least 0'
+        )
+        .refine(
+          (value) => Number(value) <= 100,
+          'Notification alert must be at most 100'
+        ),
+      status: z.boolean().optional()
     });
   }
 }

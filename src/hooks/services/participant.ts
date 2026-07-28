@@ -5,6 +5,7 @@ import {
   getParticipantCurrencyList, getHubCurrency, getLiquidityProfileList, getParticipantList,
   getParticipantPositionList,
   getRoleList,
+  getParticipantCurrencyListByDfspId,
   getParticipantListByDirectIndirect,
 } from '@services/participant'
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query'
@@ -86,6 +87,18 @@ export const useGetParticipantCurrencyList = (
     ...options
   })
 
+export const useGetParticipantCurrencyListByDfspId = (
+  dfspId: string,
+  options?: UseQueryOptions<ICurrency[], IApiErrorResponse>
+) =>
+  useQuery<ICurrency[], IApiErrorResponse>({
+    queryKey: ['getParticipantCurrencyListByDfspId', dfspId],
+    queryFn: ({ queryKey }) =>
+      getParticipantCurrencyListByDfspId(queryKey[1] as string),
+    enabled: Boolean(dfspId),
+    ...options
+  })
+
 export const useGetHubCurrency = (
   options?: UseQueryOptions<ICurrency[],
     IApiErrorResponse
@@ -138,4 +151,3 @@ export const useGetParticipantList = (
     queryFn: getParticipantPositionList,
     ...options
   })
-

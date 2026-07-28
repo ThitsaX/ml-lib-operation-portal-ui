@@ -1,0 +1,82 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
+import moment from 'moment-timezone';
+import {
+  type INdcWorkerConfiguration,
+  type ISchedulerConfigId
+} from '@typescript/services';
+
+export const DEFAULT_WORKER_MINUTES = 5;
+
+export const getConfigId = (
+  value?: string | number | ISchedulerConfigId | null
+) => {
+  if (value === null || value === undefined) return '';
+  if (typeof value === 'object')
+    return String(value.id ?? value.entityId ?? '');
+  return String(value);
+};
+
+export const intervalToMinutes = (
+  interval?: string,
+  fallback = DEFAULT_WORKER_MINUTES
+) => {
+  if (!interval) return fallback;
+
+  const cronParts = interval.trim().split(/\s+/);
+  if (cronParts.length >= 6) {
+    const minutePart = cronParts[1];
+    const intervalMinute = minutePart.match(/^(?:\*|0)\/(\d+)$/);
+    if (intervalMinute) return Math.max(1, Number(intervalMinute[1]));
+  }
+
+  const parts = interval.split(':').map((part) => Number(part));
+  if (parts.length !== 3 || parts.some(Number.isNaN)) return fallback;
+  const [hours, minutes, seconds] = parts;
+  const totalMinutes = hours * 60 + minutes + Math.ceil(seconds / 60);
+  return Math.max(1, totalMinutes);
+};
+
+export const normalizeIntervalInput = (value: string) => {
+  const digits = value.replace(/\D/g, '');
+  if (!digits) return '';
+
+  return String(Number(digits));
+};
+
+export const minutesToRunEvery = (minutes: number) => {
+  const safeMinutes = Math.max(1, Math.floor(minutes));
+  const hours = Math.floor(safeMinutes / 60);
+  const mins = safeMinutes % 60;
+  return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}:00`;
+};
+
+export const formatTimezoneOffset = (timezone?: string) => {
+  if (timezone && moment.tz.zone(timezone)) {
+    return moment().tz(timezone).format('Z');
+  }
+
+  if (timezone && /^[+-]\d{2}:\d{2}$/.test(timezone)) {
+    return timezone;
+  }
+
+  if (timezone && /^[+-]\d{4}$/.test(timezone)) {
+    return `${timezone.slice(0, 3)}:${timezone.slice(3)}`;
+  }
+
+  return '+06:00';
+};
+
+export const buildWorkerPayload = (
+  worker: INdcWorkerConfiguration | undefined,
+  intervalMinutes: number,
+  timezone?: string
+) => ({
+  name: worker?.name || 'ndc-worker-config',
+  jobName: worker?.jobName || 'NdcThresholdWorker',
+  description:
+    worker?.description || 'Calculate NDC usage and process threshold alerts',
+  runEvery: minutesToRunEvery(intervalMinutes),
+  zoneId: formatTimezoneOffset(timezone || worker?.zoneId),
+  active: worker?.active ?? true
+});

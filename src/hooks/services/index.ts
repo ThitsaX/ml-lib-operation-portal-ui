@@ -8,3 +8,4 @@ export * from './announcement';
 export * from './audit';
 export * from './pending-approvals';
 export * from './user';
+export * from './ndc-configurations';

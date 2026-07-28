@@ -269,13 +269,25 @@ const SideBar = ({ collapsed, toggleCollapse, width = DEFAULT_WIDTH, headerHeigh
             menuId="support_center"
           />
 
-          <SideBarItem
-            to="/system-admin"
-            id="8"
+          <SideBarAccordion
             icon={<FiAdmin />}
             label={t('ui.system_settings')}
             collapsed={collapsed}
             menuId="system_admin"
+            items={[
+              {
+                id: 'rolePermissions',
+                label: t('ui.role_permissions'),
+                to: '/system-admin/role-permissions',
+                menuId: 'role_permissions'
+              },
+              {
+                id: 'ndcAlertSettings',
+                label: t('ui.ndc_alert_settings'),
+                to: '/system-admin/ndc-alert-settings',
+                menuId: 'ndc_alert_settings'
+              }
+            ]}
           />
 
         </VStack>

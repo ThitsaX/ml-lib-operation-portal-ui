@@ -30,5 +30,7 @@ export const menuIds : Record<string, number>= {
     'system_admin': 28,
     'fee_settlement_report': 29,
     'fee_settlement_summary_report': 30,
-    'fee_summary_report': 31
+    'fee_summary_report': 31,
+    'role_permissions': 32,
+    'ndc_alert_settings': 33
 }

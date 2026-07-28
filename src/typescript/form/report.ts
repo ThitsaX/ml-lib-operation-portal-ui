@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 export interface ISettlementBankReport {
   startDate: string
   endDate: string
@@ -8,6 +10,15 @@ export interface ISettlementBankReport {
 }
 
 export interface ISettlementBankReportUseCase {
+  startDate: string
+  endDate: string
+  settlementId: string
+  currency: string
+  fileType: string
+  timezoneOffset: string
+}
+
+export interface IFeeSettlementReport {
   startDate: string
   endDate: string
   settlementId: string
@@ -72,4 +83,29 @@ export interface ISettlementStatementReport {
   currencyId: string
   timezoneOffset: string
   fileType: string
+}
+
+export interface IFeeSettlementSummaryReport {
+  startDate: string
+  endDate: string
+  settlementId: string
+  fspId: string
+  timezone: string
+  fileType: string
+}
+
+export interface IFeeSummaryReport {
+  startDate: string
+  endDate: string
+  fspId: string
+  timezoneOffset: string
+  fileType: string
+}
+
+export interface IFeeSettlementSummaryReportResponse {
+  requestId: string
+  status: string
+  fileUrl: string
+  fileKey: string
+  paramsSignature: string
 }

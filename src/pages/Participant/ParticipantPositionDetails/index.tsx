@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import { VStack, Heading} from '@chakra-ui/react';
 import LiquidityProfile from '@components/interface/LiquidityProfile';
 import NdcThresholdSettings from '@components/interface/LiquidityProfile/NdcThresholdSettings';

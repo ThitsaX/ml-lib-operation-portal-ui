@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import SettlementDetailReport from './SettlementDetailReport'
 import SettlementSummaryReport from './SettlementSummaryReport'
 import SettlementStatementReport from './SettlementStatementReport'
@@ -9,6 +11,9 @@ import AuditReport from './AuditReport'
 import TransactionDetailReport from './TransactionDetailReport'
 import ManagementSummaryReport from './ManagementSummaryReport'
 import TransferSettlementReport from './TransferSettlementReport'
+import FeeSettlementReport from './FeeSettlementReport'
+import FeeSettlementSummaryReport from './FeeSettlementSummaryReport'
+import FeeSummaryReport from './FeeSummaryReport'
 
 export {
   SettlementBankReport,
@@ -21,5 +26,8 @@ export {
   AuditReport,
   TransactionDetailReport,
   ManagementSummaryReport,
-  TransferSettlementReport
+  TransferSettlementReport,
+  FeeSettlementReport,
+  FeeSettlementSummaryReport,
+  FeeSummaryReport
 }

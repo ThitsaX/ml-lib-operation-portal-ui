@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import Axios, { type Method } from 'axios'
 import { createHMAC, createSHA256, sha256 } from 'hash-wasm'
 import { Configs } from '@configs'

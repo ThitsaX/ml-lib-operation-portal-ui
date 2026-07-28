@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 
 export const publicRoutes = {
   login: '/public/loginUserAccount',
@@ -44,6 +46,7 @@ export const privateRoutes = {
   getRoleListByParticipant: '/secured/getRoleListByParticipant',
   getParticipantListByParticipant: '/secured/getParticipantListByParticipant',
   getParticipantListIncludingHub:'/secured/getParticipantListIncludingHub',
+  getParticipantListByDirectIndirect: '/secured/getParticipantListByDirectIndirect',
   updateParticipantStatus: '/secured/updateParticipantStatus',
 
   createUser: '/secured/createUser',
@@ -53,6 +56,9 @@ export const privateRoutes = {
   generateTransactionAmountReport: '/secured/generateTransactionAmountReport',
   generateSettlementBankReportUseCase: '/secured/generateSettlementBankReportUseCase',
   generateSettlementBankOverviewReport: '/secured/generateSettlementBankOverviewReport',
+  generateFeeAmountReport: '/secured/generateFeeAmountReport',
+  generateFeeSummaryReport: '/secured/generateFeeSummaryReport',
+  generateFeeSettlementSummaryReport: '/secured/generateFeeSettlementSummaryReport',
 
   resetPassword: '/secured/resetPassword',
   getAllIdType: '/secured/getAllIdType',

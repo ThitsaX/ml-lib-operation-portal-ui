@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import React, { useRef, useEffect, useState } from "react";
 import Select, {
   SingleValue,

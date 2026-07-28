@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import {createSlice} from '@reduxjs/toolkit';
 import { ITimezoneOption } from 'react-timezone-select';
 import { defaultOption } from '@utils/constants';

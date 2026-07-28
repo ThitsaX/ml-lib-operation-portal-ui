@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import { memo } from 'react';
 import { Box, IconButton, Link, VStack, Button, Divider, Text, HStack, Icon } from '@chakra-ui/react';
 import SideBarAccordion from './SideBarAccordion';
@@ -218,6 +220,24 @@ const SideBar = ({ collapsed, toggleCollapse, width = DEFAULT_WIDTH, headerHeigh
                 label: t('ui.transfer_settlement_report'),
                 to: 'reports/transfer-settlement-report',
                 menuId: 'transfer_settlement_report',
+              },
+              {
+                id: 'FeeSettlementReport',
+                label: t('ui.fee_settlement_report'),
+                to: 'reports/fee-settlement-report',
+                menuId: 'fee_settlement_report',
+              },
+              {
+                id: 'FeeSettlementSummaryReport',
+                label: t('ui.fee_settlement_summary_report'),
+                to: 'reports/fee-settlement-summary-report',
+                menuId: 'fee_settlement_summary_report',
+              },
+              {
+                id: 'FeeSummaryReport',
+                label: t('ui.fee_summary_report'),
+                to: 'reports/fee-summary-report',
+                menuId: 'fee_summary_report',
               },
             ]}
           />

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import {
     Box,
     Button,
@@ -83,8 +85,12 @@ const ParticipantPositions = () => {
     const { isOpen: isNdcOpen, onOpen: onNdcOpen, onClose: onNdcClose } = useDisclosure();
 
     useEffect(() => {
-        syncHubParticipantsToPortal();
-        getPositionList();
+        const loadData = async () => {
+            await syncHubParticipantsToPortal();
+            await getPositionList();
+        };
+
+        loadData();
     }, []);
 
     const getPositionList = async () => {

@@ -29,6 +29,7 @@
   "ui.latest_announcement": "Último Anúncio",
   "ui.welcome_to_the_operation_portal": "Bem-vindo ao Portal de Operações!",
   "ui.add_new_user": "Adicionar Novo Usuário",
+  "ui.allow_user_receive_notifications": "Permitir que este usuário receba notificações",
   "ui.edit_user": "Editar Usuário",
   "ui.failed_to_fetch_users": "Falha ao buscar usuários",
   "ui.failed_to_update_user_status": "Falha ao atualizar o status do usuário",

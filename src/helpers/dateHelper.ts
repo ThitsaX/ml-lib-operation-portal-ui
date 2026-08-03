@@ -10,7 +10,7 @@ import moment from "moment-timezone";
  * @param format - output format, default "YYYY-MM-DDTHH:mm:ssZ"
  */
 export const formatEpochToTZ = (
-    epoch: number,
+    epoch: number | string,
     tz?: string,
     format = "YYYY-MM-DDTHH:mm:ssZ"
 ): string => {
@@ -19,7 +19,7 @@ export const formatEpochToTZ = (
     let m;
 
     // Determine if epoch is in seconds or milliseconds
-    m = epoch.toString().length === 10 ? moment.unix(epoch) : moment(epoch);
+    m = epoch.toString().length === 10 ? moment.unix(Number(epoch)) : moment(epoch);
 
     // Apply timezone if provided
     if (tz) {

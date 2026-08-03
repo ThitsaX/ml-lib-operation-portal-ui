@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import { memo } from 'react';
-import { Box, IconButton, Link, VStack, Button, Divider, Text, HStack, Icon } from '@chakra-ui/react';
+import { Box, IconButton, Link, VStack } from '@chakra-ui/react';
 import SideBarAccordion from './SideBarAccordion';
 import SideBarItem from './SideBarItem';
-import { FiHome, FiRepeat, FiBarChart2, FiHelpCircle, FiMenu, FiSettings,  FiUser, FiShield, FiPlus, FiDatabase, FiSettings as FiAdmin } from 'react-icons/fi';
+import { FiHome, FiRepeat, FiBarChart2, FiHelpCircle, FiMenu, FiBell, FiFileText, FiSettings as FiAdmin } from 'react-icons/fi';
 import { HiOutlineBuildingLibrary } from 'react-icons/hi2';
 import { AiOutlineAudit } from 'react-icons/ai';
 import { MdPendingActions } from 'react-icons/md';
@@ -269,6 +269,25 @@ const SideBar = ({ collapsed, toggleCollapse, width = DEFAULT_WIDTH, headerHeigh
             menuId="support_center"
           />
 
+
+          <SideBarItem
+            to="/notification-delivery-log"
+            id="8"
+            icon={<FiFileText />}
+            label={t('ui.notification_delivery_log')}
+            collapsed={collapsed}
+            menuId="notification_delivery_log"
+          />
+
+          <SideBarItem
+            to="/ndc-alert-settings"
+            id="9"
+            icon={<FiBell />}
+            label={t('ui.ndc_alert_settings')}
+            collapsed={collapsed}
+            menuId="ndc_alert_settings"
+          />
+
           <SideBarAccordion
             icon={<FiAdmin />}
             label={t('ui.system_settings')}
@@ -278,14 +297,8 @@ const SideBar = ({ collapsed, toggleCollapse, width = DEFAULT_WIDTH, headerHeigh
               {
                 id: 'rolePermissions',
                 label: t('ui.role_permissions'),
-                to: '/system-admin/role-permissions',
-                menuId: 'role_permissions'
-              },
-              {
-                id: 'ndcAlertSettings',
-                label: t('ui.ndc_alert_settings'),
-                to: '/system-admin/ndc-alert-settings',
-                menuId: 'ndc_alert_settings'
+                to: '/system-admin/role-permission',
+                menuId: 'role_permission'
               }
             ]}
           />
@@ -312,3 +325,4 @@ const SideBar = ({ collapsed, toggleCollapse, width = DEFAULT_WIDTH, headerHeigh
 };
 
 export default memo(SideBar);
+

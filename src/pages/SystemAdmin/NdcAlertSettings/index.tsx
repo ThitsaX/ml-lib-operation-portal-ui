@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import { memo, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { type ITimezoneOption } from 'react-timezone-select';
 import {
@@ -9,12 +10,10 @@ import {
   Flex,
   Grid,
   Heading,
-  HStack,
   SimpleGrid,
   Spinner,
   Text,
   VStack,
-  useColorModeValue,
   useToast
 } from '@chakra-ui/react';
 import { getErrorMessage } from '@helpers/errors';
@@ -28,7 +27,6 @@ import {
   modifyNdcWorkerConfiguration
 } from '@services/ndc-configurations';
 import {
-  DispatcherCard,
   InfoCard,
   SchemeGateCard,
   WorkerIntervalCard
@@ -43,11 +41,10 @@ import {
 
 const NdcAlertSettings = () => {
   const toast = useToast();
+  const { t } = useTranslation();
   const selectedTimezone = useSelector<RootState, ITimezoneOption>(
     (state) => state.app.selectedTimezone
   );
-  const dispatcherTableBorderColor = useColorModeValue('#E2E8F0', '#4A5568');
-  const headerBg = useColorModeValue('gray.200', 'gray.500');
   const [schemeEnabled, setSchemeEnabled] = useState(false);
   const [intervalMinutes, setIntervalMinutes] = useState<string>(
     String(DEFAULT_WORKER_MINUTES)
@@ -248,48 +245,39 @@ const NdcAlertSettings = () => {
   }
 
   return (
-    <Flex justify="center" flexDirection="column" flex={1} p="2">
-      <VStack
-        align="flex-start"
-        w="full"
-        h="full"
-        py="2"
-        px="1"
-        mt={9}
-        spacing={4}>
-        <Flex
-          justify="space-between"
-          align={{ base: 'flex-start', md: 'flex-end' }}
-          direction={{ base: 'column', md: 'row' }}
-          gap={3}
-          w="full">
-          <Box>
-            <HStack spacing={2} mb={4}>
-              <Heading fontSize="2xl" fontWeight="bold" color="gray.800">
-                NDC Alert Settings
-              </Heading>
-            </HStack>
-            <Text
-              as="h2"
-              color="gray.800"
-              fontSize={{ base: 'xl', md: '2xl' }}
-              fontWeight="bold"
-              lineHeight="1.25">
-              Scheme gate and worker interval
-            </Text>
-            <Text
-              mt={2}
-              color="gray.600"
-              fontSize="sm"
-              maxW="4xl"
-              lineHeight="1.7">
-              This page combines the scheme gate picture with worker interval
-              control. If scheme is OFF, the system should do nothing. If scheme
-              is ON, the worker must check DFSP enablement and then evaluate the
-              threshold.
-            </Text>
-          </Box>
-        </Flex>
+    <VStack align="flex-start" w="full" h="full" p="3" spacing={0} mt={10}>
+      <Heading fontSize="2xl" fontWeight="bold" mb={6}>{t('ui.ndc_alert_settings')}</Heading>
+
+      <Box w="full" bg="white" py={{ base: 4, md: 6 }}>
+        <VStack align="flex-start" w="full" spacing={4}>
+          <Flex
+            justify="space-between"
+            align={{ base: 'flex-start', md: 'flex-end' }}
+            direction={{ base: 'column', md: 'row' }}
+            gap={3}
+            w="full">
+            <Box>
+              <Text
+                as="h2"
+                color="gray.800"
+                fontSize={{ base: 'xl', md: '2xl' }}
+                fontWeight="bold"
+                lineHeight="1.25">
+                Scheme gate and worker interval
+              </Text>
+              <Text
+                mt={2}
+                color="gray.600"
+                fontSize="sm"
+                maxW="4xl"
+                lineHeight="1.7">
+                This page combines the scheme gate picture with worker interval
+                control. If scheme is OFF, the system should do nothing. If scheme
+                is ON, the worker must check DFSP enablement and then evaluate the
+                threshold.
+              </Text>
+            </Box>
+          </Flex>
 
         {(isSchemeConfigurationError || isWorkerConfigurationError) && (
           <Box
@@ -345,14 +333,9 @@ const NdcAlertSettings = () => {
             onSave={saveWorkerInterval}
           />
         </Grid>
-
-        <DispatcherCard
-          events={[]}
-          borderColor={dispatcherTableBorderColor}
-          headerBg={headerBg}
-        />
-      </VStack>
-    </Flex>
+        </VStack>
+      </Box>
+    </VStack>
   );
 };
 

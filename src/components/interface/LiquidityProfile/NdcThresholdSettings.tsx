@@ -51,13 +51,12 @@ import { NdcThresholdHelper } from '@helpers/form';
 import { useGetParticipantCurrencyListByDfspId } from '@hooks/services/participant';
 import {
   createNdcDfspConfiguration,
-  createNdcThresholdDetail,
+  createNdcThresholdApproval,
   getNdcDfspConfiguration,
   getNdcThresholdDetails,
-  modifyNdcDfspConfiguration,
-  modifyNdcThresholdDetail,
-  removeNdcThresholdDetail
+  modifyNdcDfspConfiguration
 } from '@services/ndc-configurations';
+import { type INdcThresholdForm } from '@typescript/form';
 import {
   type IApiErrorResponse,
   type INdcDfspConfiguration,
@@ -68,15 +67,7 @@ interface NdcThresholdSettingsProps {
   dfspId?: string;
 }
 
-type ThresholdForm = {
-  id?: string;
-  currency: string;
-  visualConfig: string | number;
-  ndcConfig: string | number;
-  status?: boolean;
-};
-
-const defaultThresholdForm: ThresholdForm = {
+const defaultThresholdForm: INdcThresholdForm = {
   currency: '',
   visualConfig: '',
   ndcConfig: '',
@@ -101,7 +92,7 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
   const ndcThresholdHelper = new NdcThresholdHelper();
 
   const [thresholdForm, setThresholdForm] =
-    useState<ThresholdForm>(defaultThresholdForm);
+    useState<INdcThresholdForm>(defaultThresholdForm);
   const [deleteItem, setDeleteItem] = useState<INdcThresholdDetail | null>(
     null
   );
@@ -114,7 +105,7 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
     handleSubmit,
     reset,
     formState: { errors, isDirty, isValid }
-  } = useForm<ThresholdForm>({
+  } = useForm<INdcThresholdForm>({
     defaultValues: thresholdForm,
     resolver: zodResolver(ndcThresholdHelper.schema),
     mode: 'onChange'
@@ -131,14 +122,16 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
   const thresholdConfigurationId = getConfigId(configQuery.data);
 
   const thresholdsQuery = useQuery<INdcThresholdDetail[], IApiErrorResponse>({
-    queryKey: ['getNdcThresholdDetails'],
-    queryFn: getNdcThresholdDetails,
-    enabled: Boolean(dfspId),
+    queryKey: ['getNdcThresholdDetails', thresholdConfigurationId, true],
+    queryFn: () => getNdcThresholdDetails({ thresholdConfigurationId, status: true }),
+    enabled: Boolean(thresholdConfigurationId),
     refetchOnWindowFocus: false
   });
 
   const enabled = Boolean(configQuery.data?.thresholdEnabled);
   const thresholds = thresholdsQuery.data ?? [];
+  const isConfigLoading = configQuery.isLoading || configQuery.isFetching;
+  const isThresholdsLoading = Boolean(thresholdConfigurationId) && (thresholdsQuery.isLoading || thresholdsQuery.isFetching);
 
   const currencyOptions = useMemo(
     () =>
@@ -190,8 +183,8 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
         title: t('ui.success'),
         position: 'top',
         description: nextEnabled
-          ? 'NDC threshold notifications enabled.'
-          : 'NDC threshold notifications disabled.',
+          ? t('ui.ndc_threshold_notifications_enabled')
+          : t('ui.ndc_threshold_notifications_disabled'),
         status: 'success',
         duration: 3000,
         isClosable: true
@@ -199,7 +192,7 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
       await configQuery.refetch();
       await thresholdsQuery.refetch();
     } catch (error) {
-      showError(error, 'Failed to update NDC threshold notification setting.');
+      showError(error, t('ui.failed_to_update_ndc_threshold_notification_setting'));
     } finally {
       setIsSavingConfig(false);
     }
@@ -221,45 +214,69 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
     onOpen();
   };
 
-  const saveThreshold = async (values: ThresholdForm) => {
+  const saveThreshold = async (values: INdcThresholdForm) => {
     setIsSavingThreshold(true);
     try {
       const visualConfig = Number(values.visualConfig);
       const ndcConfig = Number(values.ndcConfig);
 
-      if (values.id) {
-        await modifyNdcThresholdDetail(values.id, {
-          currency: values.currency,
-          visualConfig,
-          ndcConfig,
-          status: values.status ?? true
+      if (!dfspId) {
+        toast({
+          position: 'top',
+          status: 'warning',
+          description: t('ui.dfsp_id_not_found'),
+          duration: 3000,
+          isClosable: true
         });
-      } else {
-        if (!thresholdConfigurationId) {
+        return;
+      }
+
+      if (values.id) {
+        const originalThreshold = thresholds.find(
+          (item) => String(item.id) === String(values.id)
+        );
+        const visualChanged = originalThreshold?.visualConfig !== visualConfig;
+        const notificationChanged = originalThreshold?.ndcConfig !== ndcConfig;
+
+        if (!visualChanged && !notificationChanged) {
           toast({
             position: 'top',
             status: 'warning',
-            description: 'DFSP NDC configuration id was not found.',
+            description: t('ui.no_threshold_changes_found'),
             duration: 3000,
             isClosable: true
           });
           return;
         }
 
-        await createNdcThresholdDetail({
-          thresholdConfigurationId,
+        await createNdcThresholdApproval({
+          operation: visualChanged && notificationChanged
+            ? 'UPDATE_NDC_VISUAL_AND_NOTIFICATION_ALERT'
+            : visualChanged
+              ? 'UPDATE_NDC_VISUAL_ALERT'
+              : 'UPDATE_NDC_NOTIFICATION_ALERT',
+          participantName: dfspId,
+          thresholdDetailId: String(values.id),
+          currency: values.currency,
+          ...(visualChanged ? { visualConfig } : {}),
+          ...(notificationChanged ? { notificationConfig: ndcConfig } : {})
+        });
+      } else {
+        await createNdcThresholdApproval({
+          operation: 'CREATE_NDC_ALERT_THRESHOLD',
+          participantName: dfspId,
           currency: values.currency,
           visualConfig,
-          ndcConfig
+          notificationConfig: ndcConfig
         });
       }
 
       toast({
-        title: t('ui.success'),
+        title: values.id
+          ? t('ui.currency_threshold_update_request_submitted')
+          : t('ui.currency_threshold_create_request_submitted'),
         position: 'top',
-        description: values.id
-          ? 'Currency threshold updated.'
-          : 'Currency threshold added.',
+        description: `${t('ui.currency')}: ${values.currency}, Visual Alert: ${visualConfig}%, Notification Alert: ${ndcConfig}%`,
         status: 'success',
         duration: 3000,
         isClosable: true
@@ -267,7 +284,7 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
       await thresholdsQuery.refetch();
       onClose();
     } catch (error) {
-      showError(error, 'Failed to save currency threshold.');
+      showError(error, t('ui.failed_to_save_currency_threshold'));
     } finally {
       setIsSavingThreshold(false);
     }
@@ -278,11 +295,27 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
 
     setIsDeletingThreshold(true);
     try {
-      await removeNdcThresholdDetail(String(deleteItem.id));
+      if (!dfspId) {
+        toast({
+          position: 'top',
+          status: 'warning',
+          description: t('ui.dfsp_id_not_found'),
+          duration: 3000,
+          isClosable: true
+        });
+        return;
+      }
+
+      await createNdcThresholdApproval({
+        operation: 'DELETE_NDC_ALERT_THRESHOLD',
+        participantName: dfspId,
+        thresholdDetailId: String(deleteItem.id),
+        currency: deleteItem.currency
+      });
       toast({
         title: t('ui.success'),
         position: 'top',
-        description: `${deleteItem.currency} threshold removed.`,
+        description: t('ui.currency_threshold_delete_request_submitted', { currency: deleteItem.currency }),
         status: 'success',
         duration: 3000,
         isClosable: true
@@ -290,7 +323,7 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
       await thresholdsQuery.refetch();
       setDeleteItem(null);
     } catch (error) {
-      showError(error, 'Failed to remove currency threshold.');
+      showError(error, t('ui.failed_to_remove_currency_threshold'));
     } finally {
       setIsDeletingThreshold(false);
     }
@@ -325,13 +358,13 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
               <Switch
                 colorScheme="green"
                 isChecked={enabled}
-                isDisabled={isSavingConfig || configQuery.isLoading || !dfspId}
+                isDisabled={isSavingConfig || isConfigLoading || !dfspId}
                 onChange={(event) => toggleConfiguration(event.target.checked)}
               />
             </HStack>
           </HStack>
 
-          {configQuery.isLoading ? (
+          {isConfigLoading ? (
             <HStack color="gray.600">
               <Spinner size="sm" />
               <Text fontSize="sm">Loading DFSP configuration...</Text>
@@ -345,8 +378,7 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
               rounded="md"
               w="full">
               <Text fontSize="sm" color="orange.800">
-                No active DFSP NDC configuration was loaded for {dfspId}. Use
-                the switch or Add threshold to create it.
+                Activate the NDC threshold setting for {dfspId} first. Then add a threshold after the configuration is created.
               </Text>
             </Box>
           ) : null}
@@ -444,47 +476,56 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
                   <HeaderCell borderColor={borderColor}>
                     Notification Alert
                   </HeaderCell>
-                  <HeaderCell borderColor={borderColor}>Status</HeaderCell>
                   <HeaderCell borderColor={borderColor}>
                     {t('ui.action')}
                   </HeaderCell>
                 </Tr>
               </Thead>
               <Tbody>
-                {thresholdsQuery.isLoading && (
+                {isConfigLoading ? (
                   <Tr>
-                    <Cell borderColor={borderColor} colSpan={5}>
+                    <Cell borderColor={borderColor} colSpan={4}>
+                      <HStack justify="center">
+                        <Spinner size="sm" />
+                        <Text>Loading DFSP configuration...</Text>
+                      </HStack>
+                    </Cell>
+                  </Tr>
+                ) : configQuery.isError || !thresholdConfigurationId ? (
+                  <Tr>
+                    <Cell borderColor={borderColor} colSpan={4}>
+                      Activate the NDC threshold setting first. Then add a threshold after the configuration is created.
+                    </Cell>
+                  </Tr>
+                ) : thresholdsQuery.isError ? (
+                  <Tr>
+                    <Cell borderColor={borderColor} colSpan={4}>
+                      Failed to load currency thresholds.
+                    </Cell>
+                  </Tr>
+                ) : isThresholdsLoading ? (
+                  <Tr>
+                    <Cell borderColor={borderColor} colSpan={4}>
                       <HStack justify="center">
                         <Spinner size="sm" />
                         <Text>Loading thresholds...</Text>
                       </HStack>
                     </Cell>
                   </Tr>
-                )}
-                {!thresholdsQuery.isLoading && thresholds.length === 0 && (
+                ) : thresholds.length === 0 ? (
                   <Tr>
-                    <Cell borderColor={borderColor} colSpan={5}>
+                    <Cell borderColor={borderColor} colSpan={4}>
                       No currency thresholds yet. Use Add to create one.
                     </Cell>
                   </Tr>
-                )}
-                {thresholds.map((item) => (
+                ) : null}
+                {!isConfigLoading && !configQuery.isError && !thresholdsQuery.isError && thresholdConfigurationId && thresholds.map((item) => (
                   <Tr key={String(item.id)}>
                     <Cell borderColor={borderColor} fontWeight="semibold">
                       {item.currency}
                     </Cell>
                     <Cell borderColor={borderColor}>{item.visualConfig}%</Cell>
                     <Cell borderColor={borderColor}>{item.ndcConfig}%</Cell>
-                    <Cell borderColor={borderColor}>
-                      <Badge
-                        colorScheme={item.status ? 'green' : 'gray'}
-                        borderRadius="full"
-                        px={3}
-                        py={1}
-                        textTransform="none">
-                        {item.status ? t('ui.active') : t('ui.inactive')}
-                      </Badge>
-                    </Cell>
                     <Td border={`1px solid ${borderColor}`} px={4} py={2}>
                       <HStack spacing={3} justify="center">
                         <Tooltip
@@ -603,38 +644,6 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
                       {errors.ndcConfig?.message}
                     </FormErrorMessage>
                   </FormControl>
-
-                  <FormControl>
-                    <HStack justify="space-between" w="full">
-                      <Box>
-                        <FormLabel mb={1}>Status</FormLabel>
-                        <Text color="gray.600" fontSize="sm">
-                          Enable or disable this currency threshold.
-                        </Text>
-                      </Box>
-                      <Controller
-                        name="status"
-                        control={control}
-                        render={({ field }) => (
-                          <HStack spacing={3}>
-                            <Text
-                              color={field.value ? 'green.600' : 'gray.500'}
-                              fontSize="sm"
-                              fontWeight="semibold">
-                              {field.value ? t('ui.active') : t('ui.inactive')}
-                            </Text>
-                            <Switch
-                              colorScheme="green"
-                              isChecked={Boolean(field.value)}
-                              onChange={(event) =>
-                                field.onChange(event.target.checked)
-                              }
-                            />
-                          </HStack>
-                        )}
-                      />
-                    </HStack>
-                  </FormControl>
                 </VStack>
               </ModalBody>
               <ModalFooter display="flex" gap={3}>
@@ -694,3 +703,5 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
 };
 
 export default NdcThresholdSettings;
+
+

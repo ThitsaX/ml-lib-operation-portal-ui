@@ -44,3 +44,4 @@ export interface IGetUserData {
 }
 
 export * from './audit';
+export * from './ndc-configurations';

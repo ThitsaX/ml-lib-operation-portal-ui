@@ -25,6 +25,7 @@ import {
     Divider,
     Input,
     Icon,
+    Spinner,
     useToast,
 } from '@chakra-ui/react';
 import { FiChevronDown } from 'react-icons/fi';
@@ -37,13 +38,13 @@ import { useSelector } from 'react-redux';
 import moment from 'moment';
 
 import { RootState } from '@store';
-import { IApprovalRequest, IParticipantPositionData, PositionActionType } from '@typescript/services';
+import { IApprovalRequest, IParticipantPositionData, IThresholdDetail, PositionActionType } from '@typescript/services';
 import type { ITimezoneOption } from 'react-timezone-select';
 import DepositModal from '@components/interface/Participant';
 import WithdrawModal from '@components/interface/Participant/WidthdrawModal';
 import NetDebitCapModal from '@components/interface/Participant/NetDebitCardModal';
 import { createApprovalRequest, updateParticipantStatus,
-    syncHubParticipantsToPortal, getParticipantPositionList
+    syncHubParticipantsToPortal, getParticipantPositionList, getThresholdDfspList
  } from '@services/participant';
 import { type IApiErrorResponse } from '@typescript/services';
 import { getErrorMessage } from '@helpers/errors';
@@ -62,6 +63,10 @@ const ParticipantPositions = () => {
     const approvalRequestLockedRef = useRef(false);
     const [selectedParticipant, setSelectedParticipant] = useState<IParticipantPositionData | null>(null);
     const [participantPositionList, setParticipantPositionList] = useState<IParticipantPositionData[]>([]);
+    const [thresholdsDfspList, setThresholdDfspList] = useState<IThresholdDetail[]>([]);
+    const [isThresholdDfspListLoading, setIsThresholdDfspListLoading] = useState(true);
+    const [isThresholdDfspListReady, setIsThresholdDfspListReady] = useState(false);
+    const [isThresholdDfspListError, setIsThresholdDfspListError] = useState(false);
     const selectedTimezone = useSelector<RootState, ITimezoneOption>(
         (s) => s.app.selectedTimezone
     );
@@ -87,7 +92,7 @@ const ParticipantPositions = () => {
     useEffect(() => {
         const loadData = async () => {
             await syncHubParticipantsToPortal();
-            await getPositionList();
+            await Promise.all([getPositionList(), getThresholdDfspListData()]);
         };
 
         loadData();
@@ -110,11 +115,34 @@ const ParticipantPositions = () => {
         }
     };
 
+    const getThresholdDfspListData = async () => {
+        setIsThresholdDfspListLoading(true);
+        setIsThresholdDfspListReady(false);
+        setIsThresholdDfspListError(false);
+        try {
+            const data = await getThresholdDfspList();
+            setThresholdDfspList(data);
+            setIsThresholdDfspListReady(true);
+        } catch (error: any) {
+            const err = error as IApiErrorResponse;
+            setIsThresholdDfspListError(true);
+            toast({
+                title: 'Failed to fetch threshold DFSP list',
+                position: 'top',
+                description: getErrorMessage(err as IApiErrorResponse) || t('ui.something_went_wrong'),
+                status: 'error',
+                duration: 3000,
+                isClosable: true,
+            });
+        } finally {
+            setIsThresholdDfspListLoading(false);
+        }
+    };
     const handleRefresh = async () => {
         try {
             setStringDateTime(handleTimeZone(stringTimezone));
             await syncHubParticipantsToPortal();
-            await getPositionList();
+            await Promise.all([getPositionList(), getThresholdDfspListData()]);
             toast({
                 title: t('ui.data_refreshed'),
                 position: 'top',
@@ -138,19 +166,22 @@ const ParticipantPositions = () => {
         setStringDateTime(handleTimeZone(stringTimezone))
     }, [selectedTimezone, stringTimezone])
 
-    const getValueColor = (num: number): string => {
-        if (num > 0) {
-            return "green.500";
-        }
-        if (num <= -40) {
-            return "red.500";
-        }
-        if (num < 0 && num > -40) {
-            return "blue.500";
-        }
-        return "gray.500";
-    };
+    const thresholdByDfspCurrency = useMemo(() => {
+        return thresholdsDfspList.reduce<Record<string, IThresholdDetail>>((acc, item) => {
+            acc[`${item.dfspId}:${item.currency}`] = item;
+            return acc;
+        }, {});
+    }, [thresholdsDfspList]);
 
+    const getValueColor = useCallback((num: number, participantName: string, currency: string): string => {
+
+        const threshold = thresholdByDfspCurrency[`${participantName}:${currency}`];
+        const visualConfigValue = Number(threshold?.visualConfig ?? 40);
+        if (num > 0) return "green.500";
+        if (num <= -visualConfigValue) return "red.500";
+        if (num < 0 && num > -visualConfigValue) return "blue.500";
+        return "gray.500";
+    }, [thresholdByDfspCurrency]);
 
     const columns = useMemo(
         () => {
@@ -292,12 +323,22 @@ const ParticipantPositions = () => {
                         const displayndcUsed = ndcUsed === 0 ? ndcUsed : ((ndcUsed) * -1);
                         return (
                             <HStack spacing={2} w="full" justifyContent="flex-end">
-                                <Box
-                                    w="10px"
-                                    h="10px"
-                                    borderRadius="full"
-                                    bg={getValueColor(Number(displayndcUsed))}
-                                />
+                                {isThresholdDfspListLoading ? (
+                                    <Spinner size="xs" color="gray.400" />
+                                ) : isThresholdDfspListError || !isThresholdDfspListReady ? (
+                                    <Tooltip label="Threshold mapping unavailable" bg="white" color="black">
+                                        <Box display="flex" alignItems="center">
+                                            <MdWarningAmber size={16} color="#FACC15" style={{ stroke: "black" }} />
+                                        </Box>
+                                    </Tooltip>
+                                ) : (
+                                    <Box
+                                        w="10px"
+                                        h="10px"
+                                        borderRadius="full"
+                                        bg={getValueColor(Number(displayndcUsed), row.original.participantName, row.original.currency)}
+                                    />
+                                )}
                                 <Box textAlign="right">
                                     <Text fontSize="sm">
                                         {displayndcUsed}%
@@ -397,7 +438,7 @@ const ParticipantPositions = () => {
 
             return [...baseColumns, ...actionColumn];
         },
-        [t]
+        [getValueColor, isThresholdDfspListError, isThresholdDfspListLoading, isThresholdDfspListReady, t]
     ) as Column<IParticipantPositionData>[];
 
     useEffect(() => {
@@ -430,7 +471,7 @@ const ParticipantPositions = () => {
         if (approvalRequestLockedRef.current) return;
         approvalRequestLockedRef.current = true;
         try {
-            const res = await createApprovalRequest(data);
+            await createApprovalRequest(data);
             toast({
                 title: `${actionLabel}`,
                 position: 'top',
@@ -574,7 +615,6 @@ const ParticipantPositions = () => {
         
         approvalRequest(data, message, onNdcClose);
     };
-
 
     const toggleStatus = async (data: IParticipantPositionData) => {
         const values = {

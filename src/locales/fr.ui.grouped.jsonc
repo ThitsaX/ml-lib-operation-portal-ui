@@ -36,6 +36,7 @@
 
   // User Management
   "ui.add_new_user": "Ajouter un nouvel utilisateur",
+  "ui.allow_user_receive_notifications": "Autoriser cet utilisateur à recevoir des notifications",
   "ui.edit_user": "Modifier l'utilisateur",
   "ui.failed_to_fetch_users": "Échec de la récupération des utilisateurs",
   "ui.failed_to_update_user_status": "Échec de la mise à jour du statut de l'utilisateur",

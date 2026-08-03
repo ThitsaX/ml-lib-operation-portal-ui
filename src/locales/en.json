@@ -29,6 +29,7 @@
   "ui.latest_announcement": "Latest Announcement",
   "ui.welcome_to_the_operation_portal": "Welcome to the Operation Portal!",
   "ui.add_new_user": "Add New User",
+  "ui.allow_user_receive_notifications": "Allow this user to receive notifications",
   "ui.edit_user": "Edit User",
   "ui.failed_to_fetch_users": "Failed to fetch users",
   "ui.failed_to_update_user_status": "Failed to update user status",

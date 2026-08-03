@@ -104,6 +104,16 @@ export interface IParticipantPositionData {
   isActive: boolean
 }
 
+export interface IThresholdDetail {
+  dfspId: string;
+  currency: string;
+  visualConfig: string;
+}
+
+export interface IGetThresholdDetails {
+  thresholdDetails: IThresholdDetail[];
+}
+
 export interface IGetAllLiquidityProfile {
   liquidityProfileInfoList: ILiquidityProfile[];
 }

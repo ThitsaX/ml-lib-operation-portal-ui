@@ -49,6 +49,14 @@ export const actionIds = {
     "GenerateSettlementSummaryReport": "GenerateSettlementSummaryReport",
     "GenerateTransactionDetailReport": "GenerateTransactionDetailReport",
     "GenerateTransactionAmountSwiftReport": "GenerateTransactionAmountSwiftReport",
+    "SubmitNdcThresholdApproval": "SubmitNdcThresholdApproval",
+    "GetNdcThresholdApprovalList": "GetNdcThresholdApprovalList",
+    "ModifyNdcThresholdApprovalAction": "ModifyNdcThresholdApprovalAction",
+    "GetSchemeThresholdConfiguration": "GetSchemeThresholdConfiguration",
+    "CreateThresholdConfiguration": "CreateThresholdConfiguration",
+    "ModifyThresholdConfiguration": "ModifyThresholdConfiguration",
+    "GetSchedulerConfigByJobName": "GetSchedulerConfigByJobName",
+    "ModifySchedulerConfig": "ModifySchedulerConfig",
 } as const;
 
 export type ActionId = keyof typeof actionIds;

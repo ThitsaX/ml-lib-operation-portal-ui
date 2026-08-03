@@ -18,6 +18,7 @@ interface WorkerIntervalCardProps {
   intervalError: string;
   isSaving: boolean;
   isSaveDisabled: boolean;
+  isControlDisabled?: boolean;
   onIntervalChange: (value: string) => void;
   onIntervalBlur: () => void;
   onSave: () => void;
@@ -28,6 +29,7 @@ const WorkerIntervalCard = ({
   intervalError,
   isSaving,
   isSaveDisabled,
+  isControlDisabled = false,
   onIntervalChange,
   onIntervalBlur,
   onSave
@@ -82,6 +84,7 @@ const WorkerIntervalCard = ({
               maxW="130px"
               h="52px"
               textAlign="center"
+              isDisabled={isSaving || isControlDisabled}
               onBlur={onIntervalBlur}
               onChange={(event) => onIntervalChange(event.target.value)}
             />
@@ -111,7 +114,7 @@ const WorkerIntervalCard = ({
         bg="primary"
         _hover={{ bg: 'primary', opacity: 0.4 }}
         onClick={onSave}
-        isDisabled={isSaveDisabled || isSaving}
+        isDisabled={isSaveDisabled || isSaving || isControlDisabled}
         isLoading={isSaving}>
         Save worker interval
       </Button>

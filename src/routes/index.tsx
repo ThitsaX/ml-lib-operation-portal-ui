@@ -23,6 +23,8 @@ import { FinalizeSettlement, SettlementModels, SettlementWindows } from '@pages/
 import ProtectedRoute from "./ProtectedRoute";
 import SystemAdmin from '@pages/SystemAdmin';
 import NdcAlertSettings from '@pages/SystemAdmin/NdcAlertSettings';
+import NotificationDeliveryLog from '@pages/NotificationDeliveryLog';
+
 
 export const router = createBrowserRouter([
   {
@@ -265,6 +267,15 @@ export const router = createBrowserRouter([
         ),
       },
       {
+        path: 'notification-delivery-log',
+        caseSensitive: true,
+        element: (
+          <ProtectedRoute allowedMenuId="notification_delivery_log">
+            <NotificationDeliveryLog />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: 'change-password',
         caseSensitive: true,
         element: <ChangePassword />
@@ -280,29 +291,31 @@ export const router = createBrowserRouter([
         element: <Audit />
       },
 
-      // System Admin Routes
+      // Role Permission Routes
       {
         path: "system-admin",
-        element: <Navigate to="/system-admin/role-permissions" replace />
+        element: <Navigate to="/system-admin/role-permission" replace />
       },
+
       {
-        path: "system-admin/role-permissions",
+        path: "system-admin/role-permission",
         element: (
-          <ProtectedRoute allowedMenuId="role_permissions">
+          <ProtectedRoute allowedMenuId="role_permission">
             <SystemAdmin />
           </ProtectedRoute>
         ),
       },
       {
-        path: "system-admin/role-permissions/:roleId",
+        path: "system-admin/role-permission/:roleId",
         element: (
-          <ProtectedRoute allowedMenuId="role_permissions">
+          <ProtectedRoute allowedMenuId="role_permission">
             <SystemAdmin />
           </ProtectedRoute>
         ),
       },
+
       {
-        path: "system-admin/ndc-alert-settings",
+        path: "ndc-alert-settings",
         element: (
           <ProtectedRoute allowedMenuId="ndc_alert_settings">
             <NdcAlertSettings />

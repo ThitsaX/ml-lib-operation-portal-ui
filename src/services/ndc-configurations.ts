@@ -14,13 +14,16 @@ import {
   type INdcDfspConfiguration,
   type ICreateNdcDfspConfigurationRequest,
   type ICreateNdcDfspConfigurationResponse,
+  type INdcThresholdDetailsRequest,
   type INdcThresholdDetailsResponse,
-  type INdcThresholdDetail,
-  type ICreateNdcThresholdDetailRequest,
-  type ICreateNdcThresholdDetailResponse,
-  type IModifyNdcThresholdDetailRequest,
-  type IModifyNdcThresholdDetailResponse,
-  type IRemoveNdcThresholdDetailResponse
+  type INdcDeliveryLogsRequest,
+  type INdcDeliveryLogsResponse,
+  type ICreateNdcThresholdApprovalRequest,
+  type ICreateNdcThresholdApprovalResponse,
+  type INdcThresholdApprovalsRequest,
+  type INdcThresholdApprovalsResponse,
+  type IModifyNdcThresholdApprovalDecisionRequest,
+  type IModifyNdcThresholdApprovalDecisionResponse,
 } from '@typescript/services';
 import { type AxiosError } from 'axios';
 
@@ -301,7 +304,148 @@ export const modifyNdcDfspConfiguration = async (
     });
 };
 
-export const getNdcThresholdDetails = async () => {
+export const getNdcDeliveryLogs = async ({
+  deliveryStatus,
+  page,
+  pageSize
+}: INdcDeliveryLogsRequest) => {
+  const {
+    user: { auth }
+  } = store.getState();
+  const uri = routes.getNdcDeliveryLogs;
+  const accessKey = auth?.accessKey as string;
+  const secretKey = auth?.secretKey as string;
+  const accessToken = await generateAccessToken({
+    method: 'GET',
+    uri,
+    secret: secretKey
+  });
+  const { axios } = AxiosRequest(accessToken, accessKey);
+  return axios
+    .get<INdcDeliveryLogsResponse>(uri, {
+      params: {
+        ...(deliveryStatus ? { deliveryStatus } : {}),
+        page,
+        pageSize
+      },
+      transformResponse: [parseJsonWithLargeIntegersAsStrings]
+    })
+    .then((d) => d.data)
+    .catch((error: AxiosError<IApiErrorResponse>) => {
+      const { code, message, ...rest } = axiosErrorHandler(error);
+      if (code && message) {
+        throw {
+          error_code: code,
+          default_error_message: getErrorMessageByCode(code),
+          i18n_error_messages: null
+        };
+      }
+      throw rest;
+    });
+};
+export const createNdcThresholdApproval = async (
+  data: ICreateNdcThresholdApprovalRequest
+) => {
+  const {
+    user: { auth }
+  } = store.getState();
+  const uri = routes.createNdcThresholdApproval;
+  const accessKey = auth?.accessKey as string;
+  const secretKey = auth?.secretKey as string;
+  const accessToken = await generateAccessToken({
+    method: 'POST',
+    uri,
+    secret: secretKey,
+    payload: data
+  });
+  const { axios } = AxiosRequest(accessToken, accessKey);
+  return axios
+    .post<ICreateNdcThresholdApprovalResponse>(uri, data, {
+      transformResponse: [parseJsonWithLargeIntegersAsStrings]
+    })
+    .then((d) => d.data)
+    .catch((error: AxiosError<IApiErrorResponse>) => {
+      const { code, message, ...rest } = axiosErrorHandler(error);
+      if (code && message) {
+        throw {
+          error_code: code,
+          default_error_message: getErrorMessageByCode(code),
+          i18n_error_messages: null
+        };
+      }
+      throw rest;
+    });
+};
+export const getNdcThresholdApprovals = async (
+  params: INdcThresholdApprovalsRequest
+): Promise<INdcThresholdApprovalsResponse> => {
+  const {
+    user: { auth }
+  } = store.getState();
+  const uri = routes.getNdcThresholdApprovals;
+  const accessKey = auth?.accessKey as string;
+  const secretKey = auth?.secretKey as string;
+  const accessToken = await generateAccessToken({
+    method: 'GET',
+    uri,
+    secret: secretKey
+  });
+  const { axios } = AxiosRequest(accessToken, accessKey);
+  return axios
+    .get<INdcThresholdApprovalsResponse>(uri, {
+      params,
+      transformResponse: [parseJsonWithLargeIntegersAsStrings]
+    })
+    .then((d) => d.data)
+    .catch((error: AxiosError<IApiErrorResponse>) => {
+      const { code, message, ...rest } = axiosErrorHandler(error);
+      if (code && message) {
+        throw {
+          error_code: code,
+          default_error_message: getErrorMessageByCode(code),
+          i18n_error_messages: null
+        };
+      }
+      throw rest;
+    });
+};
+
+export const modifyNdcThresholdApprovalDecision = async (
+  approvalRequestId: string,
+  data: IModifyNdcThresholdApprovalDecisionRequest
+) => {
+  const {
+    user: { auth }
+  } = store.getState();
+  const uri = `${routes.modifyNdcThresholdApprovalDecision}/${approvalRequestId}/decision`;
+  const accessKey = auth?.accessKey as string;
+  const secretKey = auth?.secretKey as string;
+  const accessToken = await generateAccessToken({
+    method: 'PUT',
+    uri,
+    secret: secretKey,
+    payload: data
+  });
+  const { axios } = AxiosRequest(accessToken, accessKey);
+  return axios
+    .put<IModifyNdcThresholdApprovalDecisionResponse>(uri, data, {
+      transformResponse: [parseJsonWithLargeIntegersAsStrings]
+    })
+    .then((d) => d.data)
+    .catch((error: AxiosError<IApiErrorResponse>) => {
+      const { code, message, ...rest } = axiosErrorHandler(error);
+      if (code && message) {
+        throw {
+          error_code: code,
+          default_error_message: getErrorMessageByCode(code),
+          i18n_error_messages: null
+        };
+      }
+      throw rest;
+    });
+};
+
+export const getNdcThresholdDetails = async (params: INdcThresholdDetailsRequest) => {
   const {
     user: { auth }
   } = store.getState();
@@ -316,6 +460,7 @@ export const getNdcThresholdDetails = async () => {
   const { axios } = AxiosRequest(accessToken, accessKey);
   return axios
     .get<INdcThresholdDetailsResponse>(uri, {
+      params,
       transformResponse: [parseJsonWithLargeIntegersAsStrings]
     })
     .then((d) => d.data.thresholdDetails)
@@ -332,104 +477,4 @@ export const getNdcThresholdDetails = async () => {
     });
 };
 
-export const createNdcThresholdDetail = async (
-  data: ICreateNdcThresholdDetailRequest
-) => {
-  const {
-    user: { auth }
-  } = store.getState();
-  const uri = routes.modifyNdcThresholdDetails;
-  const accessKey = auth?.accessKey as string;
-  const secretKey = auth?.secretKey as string;
-  const accessToken = await generateAccessToken({
-    method: 'POST',
-    uri,
-    secret: secretKey,
-    payload: data
-  });
-  const { axios } = AxiosRequest(accessToken, accessKey);
-  return axios
-    .post<ICreateNdcThresholdDetailResponse>(uri, data, {
-      transformResponse: [parseJsonWithLargeIntegersAsStrings]
-    })
-    .then((d) => d.data)
-    .catch((error: AxiosError<IApiErrorResponse>) => {
-      const { code, message, ...rest } = axiosErrorHandler(error);
-      if (code && message) {
-        throw {
-          error_code: code,
-          default_error_message: getErrorMessageByCode(code),
-          i18n_error_messages: null
-        };
-      }
-      throw rest;
-    });
-};
 
-export const modifyNdcThresholdDetail = async (
-  id: string,
-  data: IModifyNdcThresholdDetailRequest
-) => {
-  const {
-    user: { auth }
-  } = store.getState();
-  const uri = routes.modifyNdcThresholdDetails;
-  const accessKey = auth?.accessKey as string;
-  const secretKey = auth?.secretKey as string;
-  const accessToken = await generateAccessToken({
-    method: 'PUT',
-    uri,
-    secret: secretKey,
-    payload: data
-  });
-  const { axios } = AxiosRequest(accessToken, accessKey);
-  return axios
-    .put<IModifyNdcThresholdDetailResponse>(uri, data, {
-      params: { id },
-      transformResponse: [parseJsonWithLargeIntegersAsStrings]
-    })
-    .then((d) => d.data)
-    .catch((error: AxiosError<IApiErrorResponse>) => {
-      const { code, message, ...rest } = axiosErrorHandler(error);
-      if (code && message) {
-        throw {
-          error_code: code,
-          default_error_message: getErrorMessageByCode(code),
-          i18n_error_messages: null
-        };
-      }
-      throw rest;
-    });
-};
-
-export const removeNdcThresholdDetail = async (id: string) => {
-  const {
-    user: { auth }
-  } = store.getState();
-  const uri = routes.modifyNdcThresholdDetails;
-  const accessKey = auth?.accessKey as string;
-  const secretKey = auth?.secretKey as string;
-  const accessToken = await generateAccessToken({
-    method: 'POST',
-    uri,
-    secret: secretKey
-  });
-  const { axios } = AxiosRequest(accessToken, accessKey);
-  return axios
-    .post<IRemoveNdcThresholdDetailResponse>(uri, null, {
-      params: { id },
-      transformResponse: [parseJsonWithLargeIntegersAsStrings]
-    })
-    .then((d) => d.data)
-    .catch((error: AxiosError<IApiErrorResponse>) => {
-      const { code, message, ...rest } = axiosErrorHandler(error);
-      if (code && message) {
-        throw {
-          error_code: code,
-          default_error_message: getErrorMessageByCode(code),
-          i18n_error_messages: null
-        };
-      }
-      throw rest;
-    });
-};

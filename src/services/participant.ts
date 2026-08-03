@@ -13,6 +13,7 @@ import {
   IParticipantOrganization,
   type IParticipantPositionData,
   type IAction,
+  type IThresholdDetail,
   type ICreateRoleRequest, 
   type IModifyRoleGrantListRequest
 } from '@typescript/services'
@@ -457,6 +458,36 @@ export const getParticipantListByDirectIndirect = async () => {
     .get<{ participantInfoList: IParticipantOrganization[] }>(uri, {
     })
     .then((d) => d.data.participantInfoList)
+    .catch((error: AxiosError<IApiErrorResponse>) => {
+      const { code, message, ...rest } = axiosErrorHandler(error)
+      if (code && message) {
+        throw {
+          error_code: code,
+          default_error_message: getErrorMessageByCode(code),
+          i18n_error_messages: null
+        }
+      }
+      throw rest
+    })
+}
+
+export const getThresholdDfspList = async () => {
+  const {
+    user: { auth }
+  } = store.getState()
+  const uri = routes.getThresholdDfspList
+  const accessKey = auth?.accessKey as string
+  const secretKey = auth?.secretKey as string
+  const accessToken = await generateAccessToken({
+    method: 'GET',
+    uri,
+    secret: secretKey
+  })
+  const { axios } = AxiosRequest(accessToken, accessKey)
+  return axios
+    .get<{ thresholdDetails: IThresholdDetail[] }>(uri, {
+    })
+    .then((d) => d.data.thresholdDetails)
     .catch((error: AxiosError<IApiErrorResponse>) => {
       const { code, message, ...rest } = axiosErrorHandler(error)
       if (code && message) {

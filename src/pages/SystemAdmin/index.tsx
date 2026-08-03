@@ -34,6 +34,8 @@ import { useTranslation } from 'react-i18next';
 import { PermissionCard, PaginationControls, PermissionChangesModal } from "@components/interface";
 import AddNewModal from '@components/interface/SideBar/AddNewModal';
 
+const ROLE_PERMISSION_BASE_PATH = '/system-admin/role-permission';
+
 type PermissionAction = {
   id: string;
   name: string;
@@ -183,7 +185,7 @@ const RolePermissionPage = () => {
     }
 
     resetPermissionState();
-    navigate(`/system-admin/${roleId}`);
+    navigate(`${ROLE_PERMISSION_BASE_PATH}/${roleId}`);
   };
 
   const handleCategoryChange = (category: string) => {
@@ -327,7 +329,7 @@ const RolePermissionPage = () => {
     }
 
     if (!urlRoleId || isInvalidRoleId) {
-      navigate(`/system-admin/${fallbackRoleId}`, { replace: true });
+      navigate(`${ROLE_PERMISSION_BASE_PATH}/${fallbackRoleId}`, { replace: true });
     }
   }, [fallbackRoleId, hasRoles, isInvalidRoleId, isRolesLoading, navigate, urlRoleId]);
 

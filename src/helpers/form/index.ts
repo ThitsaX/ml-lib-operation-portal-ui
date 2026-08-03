@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import { z } from 'zod';
-import { passwordRegex } from '@helpers';
+import { amountTwoDecimalRegex, passwordRegex } from '@helpers';
 
 export class FormHelper { }
 
@@ -672,6 +672,10 @@ export class NdcThresholdHelper extends FormHelper {
           'Visual alert must be a number'
         )
         .refine(
+          (value) => amountTwoDecimalRegex.test(value),
+          'Visual alert must have max 2 decimal places'
+        )
+        .refine(
           (value) => Number(value) >= 0,
           'Visual alert must be at least 0'
         )
@@ -688,6 +692,10 @@ export class NdcThresholdHelper extends FormHelper {
           'Notification alert must be a number'
         )
         .refine(
+          (value) => amountTwoDecimalRegex.test(value),
+          'Notification alert must have max 2 decimal places'
+        )
+        .refine(
           (value) => Number(value) >= 0,
           'Notification alert must be at least 0'
         )
@@ -699,3 +707,4 @@ export class NdcThresholdHelper extends FormHelper {
     });
   }
 }
+

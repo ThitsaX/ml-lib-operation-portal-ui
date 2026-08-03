@@ -3,11 +3,17 @@
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query';
 import {
   getNdcSchemeConfiguration,
+  getNdcDeliveryLogs,
+  getNdcThresholdApprovals,
   getNdcWorkerConfigurationByJobName
 } from '@services/ndc-configurations';
 import {
   type IApiErrorResponse,
   type INdcSchemeConfiguration,
+  type INdcDeliveryLogsRequest,
+  type INdcDeliveryLogsResponse,
+  type INdcThresholdApprovalsRequest,
+  type INdcThresholdApprovalsResponse,
   type INdcWorkerConfiguration
 } from '@typescript/services';
 
@@ -15,6 +21,31 @@ type NdcQueryOptions<TData> = Omit<
   UseQueryOptions<TData, IApiErrorResponse, TData>,
   'queryKey' | 'queryFn'
 >;
+
+export const useGetNdcDeliveryLogs = (
+  params: INdcDeliveryLogsRequest,
+  options?: NdcQueryOptions<INdcDeliveryLogsResponse>
+) =>
+  useQuery<INdcDeliveryLogsResponse, IApiErrorResponse, INdcDeliveryLogsResponse>(
+    {
+      queryKey: ['getNdcDeliveryLogs', params],
+      queryFn: () => getNdcDeliveryLogs(params),
+      keepPreviousData: true,
+      ...options
+    }
+  );
+export const useGetNdcThresholdApprovals = (
+  params: INdcThresholdApprovalsRequest,
+  options?: NdcQueryOptions<INdcThresholdApprovalsResponse>
+) =>
+  useQuery<INdcThresholdApprovalsResponse, IApiErrorResponse, INdcThresholdApprovalsResponse>(
+    {
+      queryKey: ['getNdcThresholdApprovals', params],
+      queryFn: () => getNdcThresholdApprovals(params),
+      keepPreviousData: true,
+      ...options
+    }
+  );
 
 export const useGetNdcSchemeConfiguration = (
   options?: NdcQueryOptions<INdcSchemeConfiguration>

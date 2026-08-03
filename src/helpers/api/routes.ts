@@ -108,7 +108,11 @@ export const privateRoutes = {
   modifyNdcConfiguration: '/secured/ndc/configurations',
   modifyNdcWorkerConfiguration: '/secured/ndc/worker-config',
   getNdcThresholdDetails: '/secured/ndc/thresholdDetails',
-  modifyNdcThresholdDetails: '/secured/ndc/thresholdDetails',
+  getNdcDeliveryLogs: '/secured/ndc/delivery-logs',
+  createNdcThresholdApproval: '/secured/ndc/threshold-approvals',
+  getNdcThresholdApprovals: '/secured/ndc/threshold-approvals',
+  modifyNdcThresholdApprovalDecision: '/secured/ndc/threshold-approvals',
+  getThresholdDfspList: '/secured/threshold/dfspList',
   getSchedulerConfigById: '/secured/getSchedulerConfigById',
   getSchedulerConfigByJobName: '/secured/getSchedulerConfigByJobName'
 };
@@ -119,3 +123,4 @@ const routes = {
 };
 
 export default routes;
+

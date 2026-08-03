@@ -47,6 +47,7 @@ import { FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { CustomSelect } from '@components/interface';
 import { HeaderCell, Cell } from '@components/interface/Table';
 import { getErrorMessage } from '@helpers/errors';
+import { hasActionPermission } from '@helpers/permissions';
 import { NdcThresholdHelper } from '@helpers/form';
 import { useGetParticipantCurrencyListByDfspId } from '@hooks/services/participant';
 import {
@@ -90,6 +91,9 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelDeleteRef = useRef<HTMLButtonElement>(null);
   const ndcThresholdHelper = new NdcThresholdHelper();
+  const canSubmitNdcThresholdApproval = hasActionPermission('SubmitNdcThresholdApproval');
+  const canModifyNdcThresholdApproval = hasActionPermission('ModifyNdcThresholdApprovalAction');
+  const thresholdTableColumnCount = canModifyNdcThresholdApproval ? 4 : 3;
 
   const [thresholdForm, setThresholdForm] =
     useState<INdcThresholdForm>(defaultThresholdForm);
@@ -451,13 +455,15 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
                 currency.
               </Text>
             </Box>
-            <Button
-              colorScheme="blue"
-              size="md"
-              onClick={openAddModal}
-              isDisabled={!dfspId}>
-              {t('ui.add')}
-            </Button>
+            {canSubmitNdcThresholdApproval ? (
+              <Button
+                colorScheme="blue"
+                size="md"
+                onClick={openAddModal}
+                isDisabled={!dfspId}>
+                {t('ui.add')}
+              </Button>
+            ) : null}
           </HStack>
 
           <TableContainer
@@ -476,15 +482,17 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
                   <HeaderCell borderColor={borderColor}>
                     Notification Alert
                   </HeaderCell>
-                  <HeaderCell borderColor={borderColor}>
-                    {t('ui.action')}
-                  </HeaderCell>
+                  {canModifyNdcThresholdApproval ? (
+                    <HeaderCell borderColor={borderColor}>
+                      {t('ui.action')}
+                    </HeaderCell>
+                  ) : null}
                 </Tr>
               </Thead>
               <Tbody>
                 {isConfigLoading ? (
                   <Tr>
-                    <Cell borderColor={borderColor} colSpan={4}>
+                    <Cell borderColor={borderColor} colSpan={thresholdTableColumnCount}>
                       <HStack justify="center">
                         <Spinner size="sm" />
                         <Text>Loading DFSP configuration...</Text>
@@ -493,19 +501,19 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
                   </Tr>
                 ) : configQuery.isError || !thresholdConfigurationId ? (
                   <Tr>
-                    <Cell borderColor={borderColor} colSpan={4}>
+                    <Cell borderColor={borderColor} colSpan={thresholdTableColumnCount}>
                       Activate the NDC threshold setting first. Then add a threshold after the configuration is created.
                     </Cell>
                   </Tr>
                 ) : thresholdsQuery.isError ? (
                   <Tr>
-                    <Cell borderColor={borderColor} colSpan={4}>
+                    <Cell borderColor={borderColor} colSpan={thresholdTableColumnCount}>
                       Failed to load currency thresholds.
                     </Cell>
                   </Tr>
                 ) : isThresholdsLoading ? (
                   <Tr>
-                    <Cell borderColor={borderColor} colSpan={4}>
+                    <Cell borderColor={borderColor} colSpan={thresholdTableColumnCount}>
                       <HStack justify="center">
                         <Spinner size="sm" />
                         <Text>Loading thresholds...</Text>
@@ -514,8 +522,10 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
                   </Tr>
                 ) : thresholds.length === 0 ? (
                   <Tr>
-                    <Cell borderColor={borderColor} colSpan={4}>
-                      No currency thresholds yet. Use Add to create one.
+                    <Cell borderColor={borderColor} colSpan={thresholdTableColumnCount}>
+                      {canSubmitNdcThresholdApproval
+                        ? 'No currency thresholds yet. Use Add to create one.'
+                        : 'No currency thresholds yet.'}
                     </Cell>
                   </Tr>
                 ) : null}
@@ -526,34 +536,36 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
                     </Cell>
                     <Cell borderColor={borderColor}>{item.visualConfig}%</Cell>
                     <Cell borderColor={borderColor}>{item.ndcConfig}%</Cell>
-                    <Td border={`1px solid ${borderColor}`} px={4} py={2}>
-                      <HStack spacing={3} justify="center">
-                        <Tooltip
-                          label="Edit threshold"
-                          bg="white"
-                          color="black">
-                          <IconButton
-                            aria-label={t('ui.edit')}
-                            icon={<FiEdit2 />}
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => openEditModal(item)}
-                          />
-                        </Tooltip>
-                        <Tooltip
-                          label="Delete threshold"
-                          bg="white"
-                          color="black">
-                          <IconButton
-                            aria-label={t('ui.delete')}
-                            icon={<FiTrash2 />}
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => setDeleteItem(item)}
-                          />
-                        </Tooltip>
-                      </HStack>
-                    </Td>
+                    {canModifyNdcThresholdApproval ? (
+                      <Td border={`1px solid ${borderColor}`} px={4} py={2}>
+                        <HStack spacing={3} justify="center">
+                          <Tooltip
+                            label="Edit threshold"
+                            bg="white"
+                            color="black">
+                            <IconButton
+                              aria-label={t('ui.edit')}
+                              icon={<FiEdit2 />}
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => openEditModal(item)}
+                            />
+                          </Tooltip>
+                          <Tooltip
+                            label="Delete threshold"
+                            bg="white"
+                            color="black">
+                            <IconButton
+                              aria-label={t('ui.delete')}
+                              icon={<FiTrash2 />}
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => setDeleteItem(item)}
+                            />
+                          </Tooltip>
+                        </HStack>
+                      </Td>
+                    ) : null}
                   </Tr>
                 ))}
               </Tbody>

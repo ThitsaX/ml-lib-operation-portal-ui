@@ -8,6 +8,7 @@ interface SchemeGateCardProps {
   isEnabled: boolean;
   isSaving: boolean;
   isFetching: boolean;
+  isToggleDisabled?: boolean;
   onToggle: (nextValue: boolean) => void;
 }
 
@@ -15,6 +16,7 @@ const SchemeGateCard = ({
   isEnabled,
   isSaving,
   isFetching,
+  isToggleDisabled = false,
   onToggle
 }: SchemeGateCardProps) => {
   const schemeStatus = isEnabled ? 'ON' : 'OFF';
@@ -68,7 +70,7 @@ const SchemeGateCard = ({
             colorScheme="green"
             size="lg"
             isChecked={isEnabled}
-            isDisabled={isSaving || isFetching}
+            isDisabled={isSaving || isFetching || isToggleDisabled}
             onChange={(event) => onToggle(event.target.checked)}
           />
         </HStack>

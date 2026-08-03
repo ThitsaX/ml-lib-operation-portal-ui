@@ -17,6 +17,7 @@ import {
   useToast
 } from '@chakra-ui/react';
 import { getErrorMessage } from '@helpers/errors';
+import { hasActionPermission } from '@helpers/permissions';
 import { type RootState } from '@store';
 import {
   useGetNdcSchemeConfiguration,
@@ -107,6 +108,8 @@ const NdcAlertSettings = () => {
   const isLoading =
     isSchemeConfigurationLoading || isWorkerConfigurationLoading;
   const schemeStatus = schemeEnabled ? 'ON' : 'OFF';
+  const canModifyThresholdConfiguration = hasActionPermission('ModifyThresholdConfiguration');
+  const canModifySchedulerConfig = hasActionPermission('ModifySchedulerConfig');
 
   const saveSchemeState = async (nextValue: boolean) => {
     const id = getConfigId(schemeConfiguration?.thresholdConfigurationId);
@@ -321,6 +324,7 @@ const NdcAlertSettings = () => {
             isEnabled={schemeEnabled}
             isSaving={isSavingScheme}
             isFetching={isSchemeConfigurationFetching}
+            isToggleDisabled={!canModifyThresholdConfiguration}
             onToggle={saveSchemeState}
           />
           <WorkerIntervalCard
@@ -328,6 +332,7 @@ const NdcAlertSettings = () => {
             intervalError={intervalError}
             isSaving={isSavingWorker}
             isSaveDisabled={isWorkerIntervalInvalid}
+            isControlDisabled={!canModifySchedulerConfig}
             onIntervalChange={handleIntervalChange}
             onIntervalBlur={handleIntervalBlur}
             onSave={saveWorkerInterval}

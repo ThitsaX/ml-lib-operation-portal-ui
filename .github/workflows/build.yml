@@ -1,9 +1,10 @@
 name: Publish image
 
 on:
-  push:
-    tags:
-      - 'v*'
+  # The build will run on all of the following event types. Semver tagged images will be published
+  # for a release. A long sha image will be published for every push.
+  release:
+    types: [published]
 
 jobs:
   main:

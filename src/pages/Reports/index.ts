@@ -14,6 +14,8 @@ import TransferSettlementReport from './TransferSettlementReport'
 import FeeSettlementReport from './FeeSettlementReport'
 import FeeSettlementSummaryReport from './FeeSettlementSummaryReport'
 import FeeSummaryReport from './FeeSummaryReport'
+import RevenueSharingSummaryReport from './RevenueSharingSummaryReport'
+import RevenueSharingDetailReport from './RevenueSharingDetailReport'
 
 export {
   SettlementBankReport,
@@ -29,5 +31,7 @@ export {
   TransferSettlementReport,
   FeeSettlementReport,
   FeeSettlementSummaryReport,
-  FeeSummaryReport
+  FeeSummaryReport,
+  RevenueSharingSummaryReport,
+  RevenueSharingDetailReport
 }

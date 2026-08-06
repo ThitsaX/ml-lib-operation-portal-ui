@@ -2,7 +2,13 @@
 // Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 
 export type RevenuePartyStatus = 'ACTIVE' | 'INACTIVE';
-export type RevenuePartyType = 'Responsible Ministry' | '3rd Party' | string;
+
+export enum RevenuePartyTypeEnum {
+  RESPONSIBLE_MINISTRY = 'Responsible Ministry',
+  THIRD_PARTY = '3rd Party'
+}
+
+export type RevenuePartyType = RevenuePartyTypeEnum | string;
 
 export interface IRevenueParty {
   revenuePartyId?: string;
@@ -92,14 +98,16 @@ export interface IRevenueConfig {
   effective_date?: string | null;
   effective_date_display?: string | null;
   effective_timezone?: string | null;
-  percentages?: IRevenueSplitPercentages;
   golPercentage?: number;
   ministryPercentage?: number;
   thirdPartyPercentage?: number;
   sendingDfspPercentage?: number;
-  lastUpdatedDate?: string | number | null;
-  modifiedBy?: string | null;
   status?: RevenueConfigStatus;
+  respondedDate?: number | string | null;
+  createdAt?: number | string | null;
+  createdBy?: string | null;
+  updatedAt?: number | string | null;
+  updatedBy?: string | null;
 }
 
 export interface IRevenueConfigFormValues {

@@ -148,10 +148,11 @@ const PendingApprovals = () => {
             </TabPanel>
           )}
           {canViewRevenueSharingTab && (
-            <TabPanel px={0} pt={6} pb={0}>
+            <TabPanel px={0} pt={0} pb={0}>
               <RevenueSharingApprovalsTab
                 isActive={activeTab === revenueSharingTabIndex}
                 selectedTZString={selectedTimezone.value}
+                filterStatus={filterStatus}
                 onCountChange={handleRevenueSharingCountChange}
               />
             </TabPanel>

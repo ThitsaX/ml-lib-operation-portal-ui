@@ -137,6 +137,65 @@ export class UserManagementHelper extends FormHelper {
   }
 }
 
+export class RevenueConfigHelper extends FormHelper {
+  validatePercentage(value: number | string, fieldLabel: string) {
+    const stringValue = String(value ?? '').trim();
+    const numericValue = Number(stringValue || 0);
+
+    if (Number.isNaN(numericValue)) return `${fieldLabel} must be a valid number`;
+    if (numericValue < 0) return `${fieldLabel} must be greater than or equal to 0`;
+    if (numericValue > 100) return `${fieldLabel} cannot exceed 100`;
+    if (!amountTwoDecimalRegex.test(stringValue)) return `${fieldLabel} must have max 2 decimal places`;
+
+    return '';
+  }
+
+  isPercentageTotalValid(total: number) {
+    return Math.abs(total - 100) < 0.001;
+  }
+
+  get schema() {
+    const percentageSchema = (fieldLabel: string) => z
+      .union([z.string(), z.number()])
+      .superRefine((value, context) => {
+        const errorMessage = this.validatePercentage(value, fieldLabel);
+        if (errorMessage) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            message: errorMessage
+          });
+        }
+      });
+
+    return z
+      .object({
+        revenueConfigId: z.string().optional(),
+        taxCodeId: z.string().trim().min(1, 'Tax Code ID is required'),
+        taxCodeDescription: z.string().trim().min(1, 'Tax Code ID Description is required'),
+        responsibleMinistryCode: z.string().trim().min(1, 'Responsible Ministry is required'),
+        thirdPartyProviderCode: z.string().optional(),
+        category: z.string().trim().min(1, 'Category is required'),
+        effectiveDate: z.string().trim().min(1, 'Effective date & time is required'),
+        effectiveTimezone: z.string().trim().min(1, 'Timezone is required'),
+        percentages: z.object({
+          GOL: percentageSchema('GoL / GRA (%)'),
+          MINISTRY: percentageSchema('Responsible Ministry (%)'),
+          '3PP': percentageSchema('3PP %'),
+          SENDING_DFSP: percentageSchema('Sending DFSP (%)')
+        })
+      })
+      .refine((value) => this.isPercentageTotalValid(
+        Number(value.percentages.GOL || 0) +
+        Number(value.percentages.MINISTRY || 0) +
+        Number(value.percentages['3PP'] || 0) +
+        Number(value.percentages.SENDING_DFSP || 0)
+      ), {
+        message: 'Revenue split must total 100%',
+        path: ['percentages']
+      });
+  }
+}
+
 export class SettlementReportHelper extends FormHelper {
   get schema() {
     return z

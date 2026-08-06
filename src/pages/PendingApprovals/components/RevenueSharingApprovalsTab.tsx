@@ -30,7 +30,6 @@ import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import { TfiAngleDoubleLeft, TfiAngleDoubleRight, TfiAngleLeft, TfiAngleRight } from 'react-icons/tfi';
 import { CellProps, Column, useSortBy, useTable } from 'react-table';
 import { CustomSelect } from '@components/interface';
-import { OptionType } from '@components/interface/CustomSelect';
 import { ConfirmDialog } from '@components/interface/ConfirmationDialog';
 import GlobalFilter from '@components/interface/GlobalFilter';
 import { formatEpochToTZ } from '@helpers/dateHelper';
@@ -39,26 +38,17 @@ import { hasActionPermission } from '@helpers/permissions';
 import { useGetPendingRevenueApprovalList } from '@hooks/services/revenue-sharing';
 import { modifyRevenueApprovalAction } from '@services/revenue-sharing';
 import { IApiErrorResponse, IRevenueApprovalDetail, IRevenuePendingApproval, RevenueApprovalAction, RevenueConfigRequestedActionEnum } from '@typescript/services';
+import { PendingApprovalStatus } from '@typescript/services/pending-approvals';
 import { PAGE_SIZE_OPTIONS } from '@utils/constants';
 
 interface RevenueSharingApprovalsTabProps {
   isActive: boolean;
   selectedTZString: string;
+  filterStatus: PendingApprovalStatus;
   onCountChange: (count: number) => void;
 }
 
 type RevenueDecisionAction = Exclude<RevenueApprovalAction, 'PENDING'>;
-
-const STATUS_OPTIONS = [
-  { value: 'PENDING', labelKey: 'ui.pending' },
-  { value: 'APPROVED', labelKey: 'ui.approved' },
-  { value: 'REJECTED', labelKey: 'ui.rejected' }
-] as const;
-
-const getStatusLabel = (status: RevenueApprovalAction | string, t: (key: string) => string) =>
-  STATUS_OPTIONS.find((option) => option.value === status)?.labelKey
-    ? t(STATUS_OPTIONS.find((option) => option.value === status)?.labelKey as string)
-    : status;
 
 const REVENUE_CONFIG_ACTION_LABELS: Record<RevenueConfigRequestedActionEnum, string> = {
   [RevenueConfigRequestedActionEnum.CREATE]: 'Create Revenue Config',
@@ -140,7 +130,6 @@ const formatDetailValue = (detail: IRevenueApprovalDetail, value: string | numbe
 const CHANGE_SUMMARY_EXCLUDED_FIELDS = new Set([
   'revenue_config_id',
   'tax_code_id',
-  'tax_code_description',
   'effective_date'
 ]);
 
@@ -177,6 +166,39 @@ const getChangeSummaryDetails = (approval: IRevenuePendingApproval) => {
   return details;
 };
 
+const renderSummaryValueLine = (
+  label: string,
+  value: string,
+  source: 'before' | 'after',
+  key: string
+) => (
+  <Text key={key} color="gray.800" fontSize="sm" lineHeight="1.55">
+    <Text as="span" color="gray.500" fontWeight="normal">{label}: </Text>
+    <Text as="span" color={source === 'after' ? 'gray.900' : 'gray.800'} fontWeight={source === 'after' ? 'semibold' : 'medium'}>
+      {value}
+    </Text>
+  </Text>
+);
+
+const renderFormattedSummaryValue = (displayValue: string, source: 'before' | 'after', keyPrefix: string) =>
+  displayValue.split('\n').map((line, index) => {
+    const separatorIndex = line.indexOf(':');
+    if (separatorIndex === -1) {
+      return (
+        <Text key={`${keyPrefix}-${index}`} color="gray.800" fontSize="sm" fontWeight={source === 'after' ? 'semibold' : 'medium'} lineHeight="1.55">
+          {line}
+        </Text>
+      );
+    }
+
+    return renderSummaryValueLine(
+      line.slice(0, separatorIndex).trim(),
+      line.slice(separatorIndex + 1).trim(),
+      source,
+      `${keyPrefix}-${index}`
+    );
+  });
+
 const renderChangeSummary = (approval: IRevenuePendingApproval, source: 'before' | 'after') => {
   const details = getChangeSummaryDetails(approval);
   const shouldShowBefore = !isCreateAction(approval.requestedAction);
@@ -188,18 +210,19 @@ const renderChangeSummary = (approval: IRevenuePendingApproval, source: 'before'
     <VStack align="stretch" spacing={1} minW="220px">
       {details.map((detail) => {
         const value = getComparableValue(detail, source);
-        if (!value) return null;
+        const hasValue = Boolean(value);
+        const displayValue = hasValue ? value : '-';
         const isPercentagesDetail = detail.valueType === 'JSON' &&
           (detail.fieldKey || '').toLowerCase() === 'percentages';
 
         return (
           <Box key={detail.fieldKey}>
-            {isPercentagesDetail ? (
-              <Text color="gray.800" fontSize="sm" fontWeight="normal" whiteSpace="pre-line">{value}</Text>
+            {hasValue ? (
+              isPercentagesDetail
+                ? renderFormattedSummaryValue(displayValue, source, detail.fieldKey)
+                : renderSummaryValueLine(getDetailDisplayLabel(detail), displayValue, source, detail.fieldKey)
             ) : (
-              <Text color="gray.800" fontSize="sm" fontWeight="normal">
-                {getDetailDisplayLabel(detail)}: {value}
-              </Text>
+              <Text color="gray.400" fontSize="sm">-</Text>
             )}
           </Box>
         );
@@ -208,11 +231,10 @@ const renderChangeSummary = (approval: IRevenuePendingApproval, source: 'before'
   );
 };
 
-const RevenueSharingApprovalsTab = ({ isActive, selectedTZString, onCountChange }: RevenueSharingApprovalsTabProps) => {
+const RevenueSharingApprovalsTab = ({ isActive, selectedTZString, filterStatus, onCountChange }: RevenueSharingApprovalsTabProps) => {
   const { t } = useTranslation();
   const toast = useToast();
   const confirmActionLockedRef = useRef(false);
-  const [filterStatus, setFilterStatus] = useState<RevenueApprovalAction>('PENDING');
   const [search, setSearch] = useState<string | undefined>(undefined);
   const [pageNumber, setPageNumber] = useState(1);
   const [pageInput, setPageInput] = useState('1');
@@ -382,9 +404,9 @@ const RevenueSharingApprovalsTab = ({ isActive, selectedTZString, onCountChange 
     }
   };
 
-  const showActionColumn = filterStatus === 'PENDING' && hasActionPermission('ModifyRevenueApprovalAction');
+  const showActionColumn = filterStatus === PendingApprovalStatus.PENDING && hasActionPermission('ModifyRevenueApprovalAction');
   const tableColumnCount = showActionColumn ? 8 : 7;
-  const emptyMessage = `No ${getStatusLabel(filterStatus, t).toLowerCase()} revenue sharing approvals found.`;
+  const emptyMessage = `No ${filterStatus.toLowerCase()} revenue sharing approvals found.`;
 
   const columns = useMemo(() => {
     const baseColumns: Column<IRevenuePendingApproval>[] = [
@@ -492,7 +514,7 @@ const RevenueSharingApprovalsTab = ({ isActive, selectedTZString, onCountChange 
         verticalAlign="middle"
         textTransform="none"
         border="1px solid"
-        borderColor="gray.200"
+        borderColor="gray.100"
         bg="gray.100"
         cursor={column.disableSortBy ? 'default' : 'pointer'}
         {...headerRest}
@@ -507,20 +529,11 @@ const RevenueSharingApprovalsTab = ({ isActive, selectedTZString, onCountChange 
 
   return (
     <>
-      <HStack w="full" justifyContent="space-between">
-        <CustomSelect
-          width="200px"
-          options={STATUS_OPTIONS.map((option) => ({ value: option.value, label: t(option.labelKey) }))}
-          value={{ value: filterStatus, label: getStatusLabel(filterStatus, t) }}
-          onChange={(selectedOption: OptionType | null) => setFilterStatus((selectedOption?.value || 'PENDING') as RevenueApprovalAction)}
-        />
-      </HStack>
-
       <VStack w="full" align="flex-start" spacing={2}>
         <GlobalFilter mt={5} globalFilter={search} setGlobalFilter={setSearch} />
 
         <Box w="full">
-          <TableContainer w="full" borderWidth={1} borderColor="gray.200" rounded="lg" mt="4" overflowX="auto">
+          <TableContainer w="full" borderWidth={1} borderColor="gray.100" rounded="lg">
             <Table variant="simple" minW="900px" {...getTableProps()}>
               <Thead bg="gray.100">
                 <Tr>
@@ -535,7 +548,7 @@ const RevenueSharingApprovalsTab = ({ isActive, selectedTZString, onCountChange 
                     verticalAlign="middle"
                     textTransform="none"
                     border="1px solid"
-                    borderColor="gray.200"
+                    borderColor="gray.100"
                     bg="gray.100"
                   >
                     <Text flex={1} fontWeight="semibold" fontSize="sm" textTransform="capitalize">Change Summary</Text>
@@ -579,7 +592,7 @@ const RevenueSharingApprovalsTab = ({ isActive, selectedTZString, onCountChange 
                           const cellProps = cell.getCellProps();
                           const { key: cellKey, ...cellRest } = cellProps;
 
-                          return <Td key={cellKey} {...cellRest} py={3} px={3} border="1px solid" borderColor="gray.200" verticalAlign="top">{cell.render('Cell')}</Td>;
+                          return <Td key={cellKey} {...cellRest} py={3} px={3} border="1px solid" borderColor="gray.100" verticalAlign="top">{cell.render('Cell')}</Td>;
                         })}
                       </Tr>
                     );

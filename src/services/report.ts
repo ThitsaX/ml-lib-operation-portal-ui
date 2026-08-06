@@ -409,7 +409,7 @@ export const generateRevenueSharingDetailReport = async (
   const params = {
     settlementId: paramsValues.settlementId,
     ...(paramsValues.category ? { category: paramsValues.category } : {}),
-    ...(paramsValues.taxCodeId && paramsValues.taxCodeId !== 'ALL' ? { taxCode: paramsValues.taxCodeId } : {}),
+    taxCode: paramsValues.taxCodeId || 'ALL',
     fileType: paramsValues.fileType,
     timezoneOffset: paramsValues.timezoneOffset,
   };

@@ -17,7 +17,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select,
   Spinner,
   Switch,
   Table,
@@ -35,7 +34,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { type ITimezoneOption } from 'react-timezone-select';
-import { Column, CellProps, useSortBy, useTable } from 'react-table';
+import { Column, CellProps, usePagination, useSortBy, useTable } from 'react-table';
 import { FaRegEdit } from 'react-icons/fa';
 import { IoChevronDown, IoChevronUp } from 'react-icons/io5';
 import {
@@ -45,6 +44,8 @@ import {
   RevenueTableContainer,
   RevenueToolbar
 } from '@pages/RevenueSharing/components';
+import { CustomSelect, PaginationControls } from '@components/interface';
+import { type OptionType } from '@components/interface/CustomSelect';
 import { formatEpochToTZ } from '@helpers/dateHelper';
 import { getErrorMessage } from '@helpers/errors';
 import { hasActionPermission } from '@helpers/permissions';
@@ -324,20 +325,23 @@ const PartyRegistry = () => {
     {
       Header: () => <Text fontWeight="semibold" fontSize="sm" textTransform="capitalize">{t('ui.party_id')}</Text>,
       id: 'partyCode',
+      width: 140,
       accessor: (party) => getPartyCode(party),
       Cell: ({ value }: CellProps<IRevenueParty, string>) => value || '-'
     },
     {
       Header: () => <Text fontWeight="semibold" fontSize="sm" textTransform="capitalize">{t('ui.name')}</Text>,
       id: 'partyName',
+      width: 320,
       accessor: (party) => getPartyName(party),
       Cell: ({ value }: CellProps<IRevenueParty, string>) => (
-        <Text color="gray.700" textAlign="left">{value || '-'}</Text>
+        <Text color="gray.700" textAlign="left" noOfLines={1} title={value || '-'}>{value || '-'}</Text>
       )
     },
     {
       Header: () => <Text fontWeight="semibold" fontSize="sm" textTransform="capitalize">{t('ui.type')}</Text>,
       id: 'partyType',
+      width: 200,
       accessor: (party) => getPartyType(party),
       Cell: ({ value }: CellProps<IRevenueParty, string>) => {
         const isThirdParty = value === 'THIRD_PARTY' || value === '3rd Party';
@@ -350,7 +354,7 @@ const PartyRegistry = () => {
             bg={isThirdParty ? 'purple.100' : 'green.50'}
             color={isThirdParty ? 'purple.700' : 'green.700'}
             fontSize="xs"
-            fontWeight="bold"
+            fontWeight="semibold"
           >
             {getPartyTypeLabel(value)}
           </Badge>
@@ -360,6 +364,7 @@ const PartyRegistry = () => {
     {
       Header: () => <Text fontWeight="semibold" fontSize="sm" textTransform="capitalize">{t('ui.status')}</Text>,
       id: 'status',
+      width: 140,
       accessor: (party) => getPartyStatus(party),
       Cell: ({ value }: CellProps<IRevenueParty, string>) => {
         const statusStyle = getStatusColor(value);
@@ -372,7 +377,7 @@ const PartyRegistry = () => {
             bg={statusStyle.bg}
             color={statusStyle.color}
             fontSize="xs"
-            fontWeight="bold"
+            fontWeight="semibold"
           >
             {value === 'ACTIVE' ? t('ui.active') : value === 'INACTIVE' ? t('ui.inactive') : value || '-'}
           </Badge>
@@ -382,18 +387,23 @@ const PartyRegistry = () => {
     {
       Header: () => <Text fontWeight="semibold" fontSize="sm" textTransform="capitalize">{t('ui.last_updated_date')}</Text>,
       id: 'lastUpdatedDate',
+      width: 220,
       accessor: (party) => formatEpochToTZ(getPartyLastUpdated(party) || '', selectedTZString),
-      Cell: ({ value }: CellProps<IRevenueParty, string>) => value || '-'
+      Cell: ({ value }: CellProps<IRevenueParty, string>) => (
+        <Text color="gray.700" textAlign="left" whiteSpace="nowrap">{value || '-'}</Text>
+      )
     },
     {
       Header: () => <Text fontWeight="semibold" fontSize="sm" textTransform="capitalize">{t('ui.modified_by')}</Text>,
       id: 'modifiedBy',
+      width: 220,
       accessor: (party) => getPartyModifiedBy(party),
       Cell: ({ value }: CellProps<IRevenueParty, string>) => value || '-'
     },
     {
       Header: () => <Text fontWeight="semibold" fontSize="sm" textTransform="capitalize">{t('ui.action')}</Text>,
       id: 'action',
+      width: 140,
       disableSortBy: true,
       Cell: ({ row }: CellProps<IRevenueParty>) => (
         <HStack justify="center" spacing={3}>
@@ -423,15 +433,26 @@ const PartyRegistry = () => {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    rows,
-    prepareRow
+    page,
+    prepareRow,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    gotoPage,
+    nextPage,
+    previousPage,
+    state: { pageIndex }
   } = useTable(
     {
       columns,
       data: filteredParties,
-      autoResetSortBy: false
+      autoResetSortBy: false,
+      initialState: {
+        pageSize: 10
+      }
     },
-    useSortBy
+    useSortBy,
+    usePagination
   );
 
   const isTableLoading = isLoading || isFetching;
@@ -440,6 +461,14 @@ const PartyRegistry = () => {
     formValues.partyName.trim() &&
     formValues.partyType &&
     (isEdit || formValues.status)
+  );
+
+  const getColumnTextAlign = (columnId: string) => (
+    ['partyName', 'lastUpdatedDate', 'modifiedBy'].includes(columnId) ? 'left' : 'center'
+  );
+
+  const getColumnHeaderJustify = (columnId: string) => (
+    ['partyName', 'lastUpdatedDate', 'modifiedBy'].includes(columnId) ? 'flex-start' : 'center'
   );
 
   return (
@@ -463,7 +492,7 @@ const PartyRegistry = () => {
         </RevenueToolbar>
 
         <RevenueTableContainer>
-            <Table variant="simple" {...getTableProps()}>
+            <Table variant="simple" layout="fixed" minW="1160px" {...getTableProps()}>
               <Thead bg="gray.100">
                 {headerGroups.map((headerGroup) => {
                   const headerGroupProps = headerGroup.getHeaderGroupProps();
@@ -478,8 +507,8 @@ const PartyRegistry = () => {
                         const { key: headerKey, ...headerRest } = headerProps;
 
                         return (
-                          <Th key={headerKey} px={3} textAlign="center" textTransform="none" borderColor="gray.100" {...headerRest}>
-                            <HStack align="center" justify="center" spacing="2">
+                          <Th key={headerKey} px={4} textAlign={getColumnTextAlign(column.id)} textTransform="none" borderColor="gray.100" w={column.width} {...headerRest}>
+                            <HStack align="center" justify={getColumnHeaderJustify(column.id)} spacing="2">
                               {column.render('Header')}
                               {column.disableSortBy ? null : (
                                 <VStack display="inline-flex" align="center" spacing={0}>
@@ -507,14 +536,14 @@ const PartyRegistry = () => {
                       </Center>
                     </Td>
                   </Tr>
-                ) : rows.length === 0 ? (
+                ) : page.length === 0 ? (
                   <Tr>
                     <Td colSpan={columns.length} py={10} textAlign="center" color="gray.600">
                       {t('ui.no_revenue_parties_found')}
                     </Td>
                   </Tr>
                 ) : (
-                  rows.map((row) => {
+                  page.map((row) => {
                     prepareRow(row);
                     const rowProps = row.getRowProps();
                     const { key: rowKey, ...rowRest } = rowProps;
@@ -526,7 +555,7 @@ const PartyRegistry = () => {
                           const { key: cellKey, ...cellRest } = cellProps;
 
                           return (
-                            <Td key={cellKey} py={2} px={3} textAlign="center" borderColor="gray.100" {...cellRest}>
+                            <Td key={cellKey} py={3} px={4} textAlign={getColumnTextAlign(cell.column.id)} borderColor="gray.100" color="gray.700" {...cellRest}>
                               {cell.render('Cell')}
                             </Td>
                           );
@@ -537,6 +566,28 @@ const PartyRegistry = () => {
                 )}
               </Tbody>
             </Table>
+            <PaginationControls
+              canPreviousPage={canPreviousPage}
+              canNextPage={canNextPage}
+              currentPageIndex={pageIndex}
+              totalPages={pageOptions.length || 1}
+              pageNumber={String(pageIndex + 1)}
+              isLoading={isTableLoading}
+              onGotoPage={gotoPage}
+              onPreviousPage={previousPage}
+              onNextPage={nextPage}
+              onPageValidation={(value) => {
+                if (!value) {
+                  gotoPage(0);
+                  return;
+                }
+
+                const pageValue = Number(value);
+                if (Number.isNaN(pageValue)) return;
+
+                gotoPage(Math.min(Math.max(pageValue, 1), pageOptions.length || 1) - 1);
+              }}
+            />
         </RevenueTableContainer>
       </RevenueCard>
 
@@ -557,14 +608,14 @@ const PartyRegistry = () => {
               </FormControl>
               <FormControl isRequired>
                 <FormLabel>{t('ui.type')}</FormLabel>
-                <Select
-                  value={formValues.partyType}
-                  onChange={(event) => setFormValues((current) => ({ ...current, partyType: event.target.value }))}
-                >
-                  {PARTY_TYPES.map((type) => (
-                    <option key={type.value} value={type.value}>{type.label}</option>
-                  ))}
-                </Select>
+                <CustomSelect
+                  options={PARTY_TYPES}
+                  value={PARTY_TYPES.find((type) => type.value === formValues.partyType) || null}
+                  onChange={(selected: OptionType | null) => setFormValues((current) => ({
+                    ...current,
+                    partyType: String(selected?.value || '')
+                  }))}
+                />
               </FormControl>
               <FormControl isRequired>
                 <FormLabel>Full name</FormLabel>
@@ -573,23 +624,23 @@ const PartyRegistry = () => {
                   onChange={(event) => setFormValues((current) => ({ ...current, partyName: event.target.value }))}
                 />
               </FormControl>
-              <FormControl>
-                <FormLabel>{t('ui.description')}</FormLabel>
-                <Input
-                  value={formValues.description}
-                  onChange={(event) => setFormValues((current) => ({ ...current, description: event.target.value }))}
-                />
-              </FormControl>
               {!isEdit && (
                 <FormControl isRequired>
                   <FormLabel>{t('ui.status')}</FormLabel>
-                  <Select
-                    value={formValues.status}
-                    onChange={(event) => setFormValues((current) => ({ ...current, status: event.target.value as RevenuePartyStatus }))}
-                  >
-                    <option value="ACTIVE">{t('ui.active')}</option>
-                    <option value="INACTIVE">{t('ui.inactive')}</option>
-                  </Select>
+                  <CustomSelect
+                    options={[
+                      { value: 'ACTIVE', label: t('ui.active') },
+                      { value: 'INACTIVE', label: t('ui.inactive') }
+                    ]}
+                    value={{
+                      value: formValues.status,
+                      label: formValues.status === 'ACTIVE' ? t('ui.active') : t('ui.inactive')
+                    }}
+                    onChange={(selected: OptionType | null) => setFormValues((current) => ({
+                      ...current,
+                      status: String(selected?.value || '') as RevenuePartyStatus
+                    }))}
+                  />
                 </FormControl>
               )}
             </VStack>

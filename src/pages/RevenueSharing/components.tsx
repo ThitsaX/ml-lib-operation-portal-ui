@@ -1,7 +1,14 @@
 // SPDX-License-Identifier: Apache-2.0
 // Copyright 2024-2026 ThitsaWorks Pte. Ltd.
 import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
   Box,
+  Button,
   HStack,
   Heading,
   Input,
@@ -13,7 +20,7 @@ import {
   type BoxProps,
   type TableContainerProps
 } from '@chakra-ui/react';
-import { type ReactNode } from 'react';
+import { type ReactNode, useRef } from 'react';
 import { TbSearch } from 'react-icons/tb';
 
 export const RevenuePageShell = ({
@@ -137,3 +144,78 @@ export const RevenueSectionLabel = ({ children }: { children: ReactNode }) => (
     {children}
   </Text>
 );
+
+interface RevenueConfirmDialogDetail {
+  label: ReactNode;
+  value: ReactNode;
+}
+
+export const RevenueConfirmDialog = ({
+  isOpen,
+  title,
+  message,
+  details = [],
+  confirmText,
+  cancelText,
+  confirmColorScheme = 'blue',
+  isLoading = false,
+  onConfirm,
+  onCancel
+}: {
+  isOpen: boolean;
+  title: ReactNode;
+  message: ReactNode;
+  details?: RevenueConfirmDialogDetail[];
+  confirmText: ReactNode;
+  cancelText: ReactNode;
+  confirmColorScheme?: string;
+  isLoading?: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}) => {
+  const cancelRef = useRef<HTMLButtonElement>(null);
+
+  return (
+    <AlertDialog
+      isOpen={isOpen}
+      leastDestructiveRef={cancelRef}
+      onClose={onCancel}
+      isCentered
+    >
+      <AlertDialogOverlay bg="blackAlpha.500">
+        <AlertDialogContent rounded="xl" boxShadow="2xl">
+          <AlertDialogHeader fontSize="lg" fontWeight="bold" color="gray.800" pb={2}>
+            {title}
+          </AlertDialogHeader>
+          <AlertDialogBody color="gray.700" pt={2}>
+            <VStack align="stretch" spacing={4}>
+              <Text>{message}</Text>
+              {details.length ? (
+                <Box bg="gray.50" border="1px solid" borderColor="gray.100" rounded="lg" px={4} py={3}>
+                  <VStack align="stretch" spacing={2}>
+                    {details.map((detail, index) => (
+                      <HStack key={index} justify="space-between" align="flex-start" spacing={4}>
+                        <Text color="gray.500" fontSize="sm">{detail.label}</Text>
+                        <Text color="gray.800" fontSize="sm" fontWeight="semibold" textAlign="right">
+                          {detail.value}
+                        </Text>
+                      </HStack>
+                    ))}
+                  </VStack>
+                </Box>
+              ) : null}
+            </VStack>
+          </AlertDialogBody>
+          <AlertDialogFooter pt={4}>
+            <Button ref={cancelRef} variant="ghost" onClick={onCancel} isDisabled={isLoading}>
+              {cancelText}
+            </Button>
+            <Button colorScheme={confirmColorScheme} onClick={onConfirm} isLoading={isLoading} ml={3}>
+              {confirmText}
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
+    </AlertDialog>
+  );
+};

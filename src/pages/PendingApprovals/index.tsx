@@ -50,7 +50,7 @@ const PendingApprovals = () => {
     hasActionPermission('GetNdcThresholdApprovalList') &&
     hasActionPermission('ModifyNdcThresholdApprovalAction');
   const canViewRevenueSharingTab = hasActionPermission('GetPendingRevenueApprovalList');
-  const revenueSharingTabIndex = canViewNdcThresholdTab ? 2 : 1;
+  const revenueSharingTabIndex = Number(canViewParticipantTab) + Number(canViewNdcThresholdTab);
 
   const handleParticipantCountChange = useCallback((count: number) => {
     setParticipantCount(count);
@@ -65,12 +65,13 @@ const PendingApprovals = () => {
     setRevenueSharingCount(count);
   }, []);
 
+
   useEffect(() => {
-    const availableTabCount = Number(canViewParticipantTab) + Number(canViewNdcThresholdTab);
+    const availableTabCount = Number(canViewParticipantTab) + Number(canViewNdcThresholdTab) + Number(canViewRevenueSharingTab);
     if (availableTabCount > 0 && activeTab >= availableTabCount) {
       setActiveTab(0);
     }
-  }, [activeTab, canViewNdcThresholdTab, canViewParticipantTab]);
+  }, [activeTab, canViewNdcThresholdTab, canViewParticipantTab, canViewRevenueSharingTab]);
 
 
   return (

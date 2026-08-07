@@ -477,7 +477,8 @@ const PartyRegistry = () => {
         title={t('ui.registered_parties')}
         description={t('ui.registered_parties_description')}
       >
-        <RevenueToolbar
+        <VStack w="full" align="stretch" spacing={2}>
+          <RevenueToolbar
           action={
             hasActionPermission("CreateRevenueParty") ? (
               <Button colorScheme="blue" onClick={openCreateModal}>{t('ui.add_party')}</Button>
@@ -507,7 +508,7 @@ const PartyRegistry = () => {
                         const { key: headerKey, ...headerRest } = headerProps;
 
                         return (
-                          <Th key={headerKey} px={4} textAlign={getColumnTextAlign(column.id)} textTransform="none" borderColor="gray.100" w={column.width} {...headerRest}>
+                          <Th key={headerKey} px={3} textAlign={getColumnTextAlign(column.id)} textTransform="none" borderColor="gray.100" w={column.width} {...headerRest}>
                             <HStack align="center" justify={getColumnHeaderJustify(column.id)} spacing="2">
                               {column.render('Header')}
                               {column.disableSortBy ? null : (
@@ -555,7 +556,7 @@ const PartyRegistry = () => {
                           const { key: cellKey, ...cellRest } = cellProps;
 
                           return (
-                            <Td key={cellKey} py={3} px={4} textAlign={getColumnTextAlign(cell.column.id)} borderColor="gray.100" color="gray.700" {...cellRest}>
+                            <Td key={cellKey} py={2} px={3} textAlign={getColumnTextAlign(cell.column.id)} borderColor="gray.100" color="gray.700" {...cellRest}>
                               {cell.render('Cell')}
                             </Td>
                           );
@@ -588,7 +589,8 @@ const PartyRegistry = () => {
                 gotoPage(Math.min(Math.max(pageValue, 1), pageOptions.length || 1) - 1);
               }}
             />
-        </RevenueTableContainer>
+          </RevenueTableContainer>
+        </VStack>
       </RevenueCard>
 
       <Modal isOpen={isOpen} onClose={closeModal} size="lg">

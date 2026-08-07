@@ -613,7 +613,8 @@ const RevenueConfig = () => {
         title={t('ui.active_revenue_rules')}
         description={t('ui.active_revenue_rules_description')}
       >
-        <RevenueToolbar
+        <VStack w="full" align="stretch" spacing={2}>
+          <RevenueToolbar
           action={
             hasActionPermission("CreateRevenueApprovalRequest") ? (
               <Button colorScheme="blue" onClick={openCreateModal}>{t('ui.add_rule')}</Button>
@@ -712,7 +713,8 @@ const RevenueConfig = () => {
                 gotoPage(Math.min(Math.max(pageValue, 1), pageOptions.length || 1) - 1);
               }}
             />
-        </RevenueTableContainer>
+          </RevenueTableContainer>
+        </VStack>
       </RevenueCard>
 
       <RevenueConfigRuleModal

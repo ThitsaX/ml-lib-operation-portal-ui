@@ -176,7 +176,7 @@ const getConfigPercentages = (config: IRevenueConfig): IRevenueSplitPercentages 
 
 const getRevenueConfigLastUpdated = (config: IRevenueConfig) => config.updatedAt || null;
 
-const getRevenueConfigModifiedBy = (config: IRevenueConfig) => config.updatedBy || '';
+const getRevenueConfigModifiedBy = (config: IRevenueConfig) => config.createdBy || '';
 
 const getRevenueConfigEffectiveDate = (config: IRevenueConfig) => config.effectiveDate;
 

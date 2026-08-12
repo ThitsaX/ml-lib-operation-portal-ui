@@ -111,7 +111,8 @@ const RevenueSharingDetailReport = () => {
 
   const taxCodeOptions = useMemo(() => {
     const configs = (revenueConfigs ?? []).filter((config: IRevenueConfig) =>
-      !selectedCategory || selectedCategory === 'ALL' || config.category === selectedCategory
+      config.status !== 'FUTURE' &&
+      (!selectedCategory || selectedCategory === 'ALL' || config.category === selectedCategory)
     );
     return [
       { value: 'ALL', label: t('ui.all_codes') },
@@ -356,7 +357,7 @@ const RevenueSharingDetailReport = () => {
                 name="fileType"
                 render={({ field }) => (
                   <CustomSelect
-                    options={[{ value: 'xlsx', label: 'XLSX' }, { value: 'pdf', label: 'PDF' }]}
+                    options={[{ value: 'xlsx', label: 'XLSX' }, { value: 'csv', label: 'CSV' }]}
                     value={field ? { value: field.value, label: field.value.toUpperCase() } : null}
                     onChange={(selected: OptionType | null) => field.onChange(selected?.value || '')}
                     placeholder={t('ui.choose_format')}

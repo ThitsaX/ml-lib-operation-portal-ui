@@ -283,7 +283,7 @@ const RevenueSharingSummaryReport = () => {
                 name="fileType"
                 render={({ field }) => (
                   <CustomSelect
-                    options={[{ value: 'xlsx', label: 'XLSX' }, { value: 'pdf', label: 'PDF' }]}
+                    options={[{ value: 'xlsx', label: 'XLSX' }, { value: 'csv', label: 'CSV' }]}
                     value={field ? { value: field.value, label: field.value.toUpperCase() } : null}
                     onChange={(selected: OptionType | null) => field.onChange(selected?.value || '')}
                     placeholder={t('ui.choose_format')}

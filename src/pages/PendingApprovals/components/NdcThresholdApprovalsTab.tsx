@@ -124,14 +124,15 @@ const NdcThresholdApprovalsTab = ({ selectedTZString, filterStatus, onCountChang
     );
   }, [approvals, search]);
 
+  const badgeCount = hasServerPagination ? data?.total ?? approvals.length : approvals.length;
   const totalRecords = hasServerPagination ? data?.total ?? approvals.length : filteredApprovals.length;
   const totalPages = Math.max(1, data?.totalPages ?? Math.ceil(totalRecords / pageSize));
   const canPreviousPage = pageNumber > 1;
   const canNextPage = pageNumber < totalPages;
 
   useEffect(() => {
-    onCountChange(totalRecords);
-  }, [onCountChange, totalRecords]);
+    onCountChange(badgeCount);
+  }, [badgeCount, onCountChange]);
 
   useEffect(() => {
     setPageNumber(1);

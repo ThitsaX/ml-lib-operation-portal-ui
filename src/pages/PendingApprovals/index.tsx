@@ -50,7 +50,6 @@ const PendingApprovals = () => {
     hasActionPermission('GetNdcThresholdApprovalList') &&
     hasActionPermission('ModifyNdcThresholdApprovalAction');
   const canViewRevenueSharingTab = hasActionPermission('GetPendingRevenueApprovalList');
-  const revenueSharingTabIndex = Number(canViewParticipantTab) + Number(canViewNdcThresholdTab);
 
   const handleParticipantCountChange = useCallback((count: number) => {
     setParticipantCount(count);
@@ -164,7 +163,6 @@ const PendingApprovals = () => {
           {canViewRevenueSharingTab && (
             <TabPanel px={0} pt={0} pb={0}>
               <RevenueSharingApprovalsTab
-                isActive={activeTab === revenueSharingTabIndex}
                 selectedTZString={selectedTimezone.value}
                 filterStatus={filterStatus}
                 onCountChange={handleRevenueSharingCountChange}

@@ -42,7 +42,6 @@ import { PendingApprovalStatus } from '@typescript/services/pending-approvals';
 import { PAGE_SIZE_OPTIONS } from '@utils/constants';
 
 interface RevenueSharingApprovalsTabProps {
-  isActive: boolean;
   selectedTZString: string;
   filterStatus: PendingApprovalStatus;
   onCountChange: (count: number) => void;
@@ -231,7 +230,7 @@ const renderChangeSummary = (approval: IRevenuePendingApproval, source: 'before'
   );
 };
 
-const RevenueSharingApprovalsTab = ({ isActive, selectedTZString, filterStatus, onCountChange }: RevenueSharingApprovalsTabProps) => {
+const RevenueSharingApprovalsTab = ({ selectedTZString, filterStatus, onCountChange }: RevenueSharingApprovalsTabProps) => {
   const { t } = useTranslation();
   const toast = useToast();
   const confirmActionLockedRef = useRef(false);
@@ -253,7 +252,7 @@ const RevenueSharingApprovalsTab = ({ isActive, selectedTZString, filterStatus, 
     isError,
     error,
     refetch
-  } = useGetPendingRevenueApprovalList({ enabled: isActive });
+  } = useGetPendingRevenueApprovalList();
 
   const approvals = useMemo(() => data ?? [], [data]);
   const isTableLoading = isLoading || isFetching;
@@ -275,15 +274,16 @@ const RevenueSharingApprovalsTab = ({ isActive, selectedTZString, filterStatus, 
     }
   }, [error, isError, t, toast]);
 
-  const filteredApprovals = useMemo(() => {
+  const statusFilteredApprovals = useMemo(() => {
     const normalizedStatus = filterStatus.toUpperCase();
+    return approvals.filter((approval) => (approval.action || '').toUpperCase() === normalizedStatus);
+  }, [approvals, filterStatus]);
+
+  const filteredApprovals = useMemo(() => {
     const searchValue = (search || '').trim().toLowerCase();
+    if (!searchValue) return statusFilteredApprovals;
 
-    return approvals.filter((approval) => {
-      const statusMatches = (approval.action || '').toUpperCase() === normalizedStatus;
-      if (!statusMatches) return false;
-      if (!searchValue) return true;
-
+    return statusFilteredApprovals.filter((approval) => {
       const details = approval.details || [];
       const searchableDetails = details.flatMap((detail) => [
         detail.fieldLabel,
@@ -304,16 +304,17 @@ const RevenueSharingApprovalsTab = ({ isActive, selectedTZString, filterStatus, 
         .filter(Boolean)
         .some((value) => String(value).toLowerCase().includes(searchValue));
     });
-  }, [approvals, filterStatus, search]);
+  }, [search, statusFilteredApprovals]);
 
+  const badgeCount = statusFilteredApprovals.length;
   const totalRecords = filteredApprovals.length;
   const totalPages = Math.max(1, Math.ceil(totalRecords / pageSize));
   const canPreviousPage = pageNumber > 1;
   const canNextPage = pageNumber < totalPages;
 
   useEffect(() => {
-    onCountChange(totalRecords);
-  }, [onCountChange, totalRecords]);
+    onCountChange(badgeCount);
+  }, [badgeCount, onCountChange]);
 
   useEffect(() => {
     setPageNumber(1);

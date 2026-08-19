@@ -48,8 +48,8 @@ import { CustomSelect } from '@components/interface';
 import { HeaderCell, Cell } from '@components/interface/Table';
 import { getErrorMessage } from '@helpers/errors';
 import { hasActionPermission } from '@helpers/permissions';
+import NumericInput from '@components/common/NumericInput';
 import { NdcThresholdHelper } from '@helpers/form';
-import { useGetSchemeThresholdConfiguration } from '@hooks/services/ndc-configurations';
 import { useGetParticipantCurrencyListByDfspId } from '@hooks/services/participant';
 import {
   createNdcDfspConfiguration,
@@ -107,11 +107,6 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
   const [isSavingThreshold, setIsSavingThreshold] = useState(false);
   const [isDeletingThreshold, setIsDeletingThreshold] = useState(false);
 
-  const schemeQuery = useGetSchemeThresholdConfiguration({
-    retry: false,
-    refetchOnWindowFocus: false
-  });
-
   const {
     control,
     handleSubmit,
@@ -142,8 +137,7 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
 
   const enabled = Boolean(configQuery.data?.thresholdEnabled);
   const thresholds = thresholdsQuery.data ?? [];
-  const isSchemeConfigLoading = schemeQuery.isLoading || schemeQuery.isFetching;
-  const isSchemeThresholdGateOff = schemeQuery.data?.thresholdEnabled === false;
+  const isSchemeThresholdGateOff = configQuery.data?.schemeEnabled === false;
   const isConfigLoading = configQuery.isLoading || configQuery.isFetching;
   const isThresholdsLoading = Boolean(thresholdConfigurationId) && (thresholdsQuery.isLoading || thresholdsQuery.isFetching);
   const configurationSwitchTooltipLabel = isConfigurationSwitchPermissionDisabled
@@ -393,7 +387,13 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
                   <Switch
                     colorScheme="green"
                     isChecked={enabled}
-                    isDisabled={isSavingConfig || isConfigLoading || isSchemeConfigLoading || !dfspId || isConfigurationSwitchPermissionDisabled || isSchemeThresholdGateOff}
+                    isDisabled={
+                      isSavingConfig ||
+                      isConfigLoading ||
+                      !dfspId ||
+                      isConfigurationSwitchPermissionDisabled ||
+                      isSchemeThresholdGateOff
+                    }
                     onChange={(event) => toggleConfiguration(event.target.checked)}
                   />
                 </Box>
@@ -401,12 +401,7 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
             </HStack>
           </HStack>
 
-          {isSchemeConfigLoading ? (
-            <HStack color="gray.600">
-              <Spinner size="sm" />
-              <Text fontSize="sm">Loading scheme NDC threshold configuration...</Text>
-            </HStack>
-          ) : isSchemeThresholdGateOff ? (
+          {isSchemeThresholdGateOff ? (
             <Box
               p={3}
               bg="orange.50"
@@ -510,7 +505,7 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
                 colorScheme="blue"
                 size="md"
                 onClick={openAddModal}
-                isDisabled={!dfspId || isSchemeConfigLoading || isSchemeThresholdGateOff}>
+                isDisabled={!dfspId || isConfigLoading || isSchemeThresholdGateOff}>
                 {t('ui.add')}
               </Button>
             ) : null}
@@ -657,6 +652,7 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
                             field.onChange(selectedOption?.value ?? '')
                           }
                           placeholder={t('ui.select_currency')}
+                          isDisabled={Boolean(thresholdForm.id)}
                         />
                       )}
                     />
@@ -673,14 +669,21 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
                       name="visualConfig"
                       control={control}
                       render={({ field }) => (
-                        <Input
-                          type="number"
+                        <NumericInput
+                          value={field.value ?? ''}
+                          onChange={(v) => field.onChange(v)}
+                          onBlur={(v) => {
+                            field.onChange(v);
+                            // mark touched in react-hook-form
+                            try {
+                              field.onBlur();
+                            } catch {}
+                          }}
+                          placeholder="0.00"
+                          maxDecimals={2}
                           min={0}
                           max={100}
-                          value={field.value ?? ''}
-                          onChange={(event) =>
-                            field.onChange(event.target.value)
-                          }
+                          aria-label="visual-alert"
                         />
                       )}
                     />
@@ -695,14 +698,20 @@ const NdcThresholdSettings = ({ dfspId }: NdcThresholdSettingsProps) => {
                       name="ndcConfig"
                       control={control}
                       render={({ field }) => (
-                        <Input
-                          type="number"
+                        <NumericInput
+                          value={field.value ?? ''}
+                          onChange={(v) => field.onChange(v)}
+                          onBlur={(v) => {
+                            field.onChange(v);
+                            try {
+                              field.onBlur();
+                            } catch {}
+                          }}
+                          placeholder="0.00"
+                          maxDecimals={2}
                           min={0}
                           max={100}
-                          value={field.value ?? ''}
-                          onChange={(event) =>
-                            field.onChange(event.target.value)
-                          }
+                          aria-label="notification-alert"
                         />
                       )}
                     />
